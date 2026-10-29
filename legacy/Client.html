@@ -1,0 +1,194 @@
+<script>
+'use strict';
+// Cliente do V.I.D.E. - telas compartilhadas; todas as gravações passam pelo Código.gs.
+const app = {aluno:null, modulo:'Ocorrencias', tela:'busca'};
+const FORMULARIOS = {Ocorrencias:'formOcorrencia',Atestados:'formAtestado',Atendimentos:'formAtendimento',Alunos:'formAluno'};
+const PAGINAS = {Ocorrencias:'Cad_Ocorrencia',Atestados:'Cad_Atestado',Atendimentos:'Cad_Atendimento',Alunos:'Cad_Aluno'};
+const SINGULAR = {Ocorrencias:'ocorrência',Atestados:'atestado',Atendimentos:'atendimento'};
+// Evita respostas antigas sobrescrevendo consultas mais recentes.
+let versaoBusca = 0;
+let versaoAba = 0;
+
+function e(s) {return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function formatarData(v) {
+  if (!v) return '—';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v.substring(8,10)+'/'+v.substring(5,7)+'/'+v.substring(0,4);
+  return String(v);
+}
+function hojeLocal() {
+  const d = new Date(); const p = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+}
+function aviso(msg, erro=false) {
+  const box = document.getElementById('aviso');
+  box.hidden = !msg; box.className = erro ? 'aviso erro' : 'aviso'; box.textContent = msg || '';
+  if (msg) box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function pedir(fn, ...args) {
+  return new Promise((resolve,reject) => {
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      reject(new Error('Abra o sistema a partir de uma janela do Google Planilhas.')); return;
+    }
+    google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](...args);
+  });
+}
+async function processar(exec) {
+  try {aviso(''); return await exec();}
+  catch (err) {aviso(err && err.message ? err.message : String(err), true);return null;}
+}
+function ir(pagina) {
+  if (pagina === 'port' && !app.aluno) return ir('busca');
+  app.tela = pagina;
+  document.querySelectorAll('.view').forEach(v => {v.hidden = v.id !== 'view-'+pagina;});
+  if (pagina === 'busca') buscar();
+  if (pagina === 'port') renderizarPortfolio();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function dadosForm(nome) {
+  const form = document.getElementById(nome);
+  return Object.fromEntries(Array.from(new FormData(form).entries()));
+}
+function preencherForm(nome, registro) {
+  const form = document.getElementById(nome);
+  form.reset();
+  Object.entries(registro || {}).forEach(([chave,valor])=>{
+    const input = form.elements.namedItem(chave);
+    if (input && 'value' in input) input.value = String(valor || '');
+  });
+}
+
+async function buscar() {
+  const minhaBusca = ++versaoBusca;
+  const filtros = {termo:document.getElementById('termo').value,
+    serie:document.getElementById('serieFiltro').value,
+    periodo:document.getElementById('periodoFiltro').value};
+  const resultado = await processar(()=>pedir('pesquisarAlunos', filtros));
+  // Não exibe resultados de uma pesquisa anterior nem em outra tela.
+  if (minhaBusca !== versaoBusca || app.tela !== 'busca' || !resultado) return;
+  document.getElementById('contagem').textContent = resultado.total+' encontrados'+(resultado.total>200?' (exibindo 200)':'');
+  const tbody = document.getElementById('resultadoAlunos');
+  if (!resultado.alunos.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty">Nenhum aluno encontrado. Cadastre um aluno fictício para testar.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = resultado.alunos.map(a=>`<tr>
+    <td>${e(a.eol)}<div class="muted">${e(a.ra)}</div></td><td><strong>${e(a.nome)}</strong></td>
+    <td>${e(a.serie)}</td><td>${e(a.turma)}</td><td>${e(a.periodo)}</td><td>${e(a.situacao)}</td>
+    <td><button class="primary" data-acao="abrir-aluno" data-id="${e(a._id)}">Ver detalhes</button></td>
+  </tr>`).join('');
+}
+let versaoAluno = 0;
+async function abrirAluno(id) {
+  const minhaSelecao = ++versaoAluno;
+  const aluno = await processar(()=>pedir('obterAluno',id));
+  if (minhaSelecao !== versaoAluno || app.tela !== 'busca' || !aluno) return;
+  app.aluno = aluno; app.modulo = 'Ocorrencias'; ir('port');
+}
+function renderizarPortfolio() {
+  if (!app.aluno) return;
+  const a = app.aluno;
+  document.getElementById('resumoAluno').innerHTML = `<h1>${e(a.nome)}</h1>
+    <small>EOL: ${e(a.eol)} | RA: ${e(a.ra)} | Série: ${e(a.serie)} | Turma: ${e(a.turma)} | Período: ${e(a.periodo)} | Situação: ${e(a.situacao)}</small>`;
+  trocarAba(app.modulo);
+}
+async function trocarAba(modulo) {
+  if (!app.aluno || !['Ocorrencias','Atestados','Atendimentos'].includes(modulo)) return;
+  const minhaAba = ++versaoAba;
+  const idAluno = app.aluno._id;
+  app.modulo = modulo;
+  document.querySelectorAll('button[data-tab]').forEach(btn =>btn.classList.toggle('active',btn.dataset.tab===modulo));
+  document.getElementById('tituloModulo').textContent = modulo;
+  document.getElementById('novoRegistro').textContent = '+ Novo '+SINGULAR[modulo];
+  const lista = document.getElementById('listaRegistros');
+  lista.innerHTML = '<p class="muted">Carregando registros...</p>';
+  const registros = await processar(()=>pedir('listarRegistros',modulo,idAluno));
+  // A consulta só pode alterar a aba se ainda for do mesmo aluno e módulo.
+  if (minhaAba !== versaoAba || app.tela !== 'port' ||
+      !app.aluno || app.aluno._id !== idAluno || app.modulo !== modulo) return;
+  if (!registros) {lista.innerHTML='';return;}
+  if (!registros.length) {lista.innerHTML = '<div class="empty">Nenhum registro cadastrado para este aluno.</div>';return;}
+  lista.innerHTML = registros.map(r=>{
+    const titulo = modulo==='Ocorrencias' ? r.relato : modulo==='Atestados' ? r.tipo : r.tipo;
+    const data = modulo==='Atestados' ? formatarData(r.data_inicio)+' a '+formatarData(r.data_fim) : formatarData(r.data);
+    const detalhes = modulo==='Ocorrencias'
+      ? `<p><b>Relato:</b> ${e(r.relato)}</p><p><b>Estratégia:</b> ${e(r.estrategia)}</p><p><b>Encaminhamento:</b> ${e(r.encaminhamento)}</p>`
+      : modulo==='Atestados'
+      ? `<p><b>Observações:</b> ${e(r.observacao)}</p>`
+      : `<p><b>Descrição:</b> ${e(r.descricao)}</p><p><b>Encaminhamento:</b> ${e(r.encaminhamento)}</p>`;
+    return `<article class="record"><h3>${e(String(titulo||'Registro').slice(0,100))}</h3><p class="muted">${e(data)} | ID ${e(r._id.slice(0,8))}</p>
+      ${detalhes}<div class="stack"><button class="secondary" data-acao="editar-registro" data-id="${e(r._id)}">Editar</button>
+      <button class="danger" data-acao="excluir-registro" data-id="${e(r._id)}">Excluir</button></div></article>`;
+  }).join('');
+}
+function novoRegistro() {
+  if (!app.aluno) return aviso('Selecione um aluno.',true);
+  const modulo = app.modulo;
+  const form = FORMULARIOS[modulo];
+  preencherForm(form, {_id:'',aluno_id:app.aluno._id});
+  if (modulo==='Ocorrencias'||modulo==='Atendimentos') document.getElementById(form).elements.namedItem('data').value = hojeLocal();
+  if (modulo==='Atestados') {
+    document.getElementById(form).elements.namedItem('data_inicio').value = hojeLocal();
+    document.getElementById(form).elements.namedItem('data_fim').value = hojeLocal();
+  }
+  const el = document.getElementById('nomeAluno'+(modulo==='Ocorrencias'?'Ocorrencia':modulo==='Atestados'?'Atestado':'Atendimento'));
+  el.textContent = 'Aluno: '+app.aluno.nome;
+  document.getElementById('titulo'+(modulo==='Ocorrencias'?'Ocorrencia':modulo==='Atestados'?'Atestado':'Atendimento')).textContent='Novo '+SINGULAR[modulo];
+  ir(PAGINAS[modulo]);
+}
+async function editarRegistro(id) {
+  const modulo = app.modulo;
+  const item = await processar(()=>pedir('obterRegistro',modulo,id));
+  if (!item) return;
+  if (!app.aluno || app.aluno._id!==item.aluno_id) {aviso('Registro não pertence ao aluno selecionado.',true);return;}
+  novoRegistro();
+  preencherForm(FORMULARIOS[modulo],item);
+  const rotulo = modulo==='Ocorrencias'?'Ocorrencia':modulo==='Atestados'?'Atestado':'Atendimento';
+  document.getElementById('titulo'+rotulo).textContent = 'Editar '+SINGULAR[modulo];
+}
+async function excluirRegistroDaTela(id) {
+  if (!confirm('Excluir este registro fictício? Essa ação não poderá ser desfeita.')) return;
+  const ok = await processar(()=>pedir('excluirRegistro',app.modulo,id));
+  if (ok && ok.sucesso) {aviso('Registro excluído.');trocarAba(app.modulo);}
+}
+async function salvarModulo(ev,modulo) {
+  ev.preventDefault();
+  const btn = ev.currentTarget.querySelector('[type=submit]');
+  btn.disabled=true;
+  try {
+    const result = await processar(()=>pedir('salvarRegistro',modulo,dadosForm(FORMULARIOS[modulo])));
+    if (!result || !result.sucesso) return;
+    aviso('Registro '+result.acao+' com sucesso.');
+    if (modulo==='Alunos') {
+      const aluno = await processar(()=>pedir('obterAluno',result.id));
+      if (aluno) {app.aluno=aluno;app.modulo='Ocorrencias';ir('port');}
+    } else {ir('port');}
+  } finally {btn.disabled=false;}
+}
+function novoAluno() {
+  app.aluno = null;
+  preencherForm('formAluno', {_id:''});
+  document.getElementById('tituloAluno').textContent='Cadastrar estudante fictício';
+  ir('Cad_Aluno');
+}
+function editarAlunoAtual() {
+  if (!app.aluno) return;
+  preencherForm('formAluno',app.aluno);
+  document.getElementById('tituloAluno').textContent='Editar dados do estudante';
+  ir('Cad_Aluno');
+}
+function voltarDoAluno() {ir(app.aluno?'port':'busca');}
+
+// Delegação mantém os handlers corretos mesmo quando linhas são reconstruídas.
+document.addEventListener('click',ev=>{
+  const btn=ev.target.closest('[data-acao]');if(!btn)return;
+  const id=btn.dataset.id;
+  if(btn.dataset.acao==='abrir-aluno')abrirAluno(id);
+  if(btn.dataset.acao==='editar-registro')editarRegistro(id);
+  if(btn.dataset.acao==='excluir-registro')excluirRegistroDaTela(id);
+});
+document.getElementById('formBusca').addEventListener('submit',ev=>{ev.preventDefault();buscar();});
+document.getElementById('formBusca').addEventListener('reset',()=>setTimeout(buscar,0));
+Object.entries(FORMULARIOS).forEach(([modulo,id])=>document.getElementById(id).addEventListener('submit',ev=>salvarModulo(ev,modulo)));
+// Primeira tela: não cria nem altera dados automaticamente.
+buscar();
+</script>

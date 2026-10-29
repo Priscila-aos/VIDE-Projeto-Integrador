@@ -1,85 +1,81 @@
 # V.I.D.E. — Visibilidade das Informações de Dados Estudantis
 
-**Projeto Integrador em Computação II | Protótipo acadêmico (2026)**
+**Projeto Integrador em Computação II · Protótipo acadêmico · 2026**
 
-O **V.I.D.E.** é um protótipo para organizar informações escolares em portfólios individuais de estudantes. A solução utiliza **Google Apps Script**, **Google Planilhas** e uma interface em **HTML, CSS e JavaScript**. Os arquivos anexados são gerenciados no **Google Drive**.
+O V.I.D.E. é um sistema demonstrativo para organizar informações de estudantes em um portfólio individual. A implementação combina uma interface HTML/CSS/JavaScript, regras de negócio em Google Apps Script, armazenamento tabular em Google Planilhas e gerenciamento de anexos pelo Google Drive.
 
-> **Atenção:** ambiente acadêmico de demonstração, desenvolvido e testado com dados fictícios. Não é um sistema oficial da escola, não está homologado para operação institucional e **não deve receber dados reais de estudantes** sem autorização e controles de segurança adequados.
+> **Uso exclusivamente demonstrativo.** O protótipo foi testado com dados fictícios. Não está homologado para dados reais de estudantes, sobretudo informações de saúde e Educação Especial. Não é uma ferramenta oficial da escola ou da rede de ensino.
 
-## Funcionalidades
+## Visão do sistema
 
-| Módulo | Recursos disponíveis no protótipo |
+<table><tr>
+<td><img src="screenshots/01-busca.jpg" alt="Busca de estudantes fictícios" width="340"></td>
+<td><img src="screenshots/02-portfolio.jpg" alt="Portfólio do estudante" width="340"></td>
+</tr><tr>
+<td>Busca, filtros e identificação</td><td>Portfólio com módulos integrados</td>
+</tr></table>
+
+Mais capturas: [cadastro do aluno](screenshots/03-cadastro-aluno.jpg) · [contatos](screenshots/04-contatos.jpg) · [atestado](screenshots/05-atestado.jpg) · [atendimento](screenshots/06-atendimento.jpg) · [ocorrência](screenshots/07-ocorrencia.jpg) · [anexos](screenshots/08-anexos.jpg) · [documentos](screenshots/09-documentos.jpg) · [evidência pedagógica](screenshots/10-evidencia.jpg) · [Educação Especial](screenshots/11-educacao-especial.jpg) · [relatório individual](screenshots/12-relatorio.jpg).
+
+## Funcionalidades implementadas
+
+| Módulo | Operações principais |
 | --- | --- |
-| Estudantes | Cadastro e edição; pesquisa por nome, EOL ou RA; filtros por série e período; prevenção de EOL duplicado |
-| Contatos | Registro de responsáveis, parentesco, telefone e prioridade |
-| Atestados | Período, tipo, número de dias, abrangência do afastamento e anexos |
-| Atendimentos | Registro de ações, participantes, profissionais responsáveis e encaminhamentos |
-| Ocorrências | Histórico, estratégias, encaminhamentos e impressão de registro demonstrativo |
-| Documentos | Anexos e modelos demonstrativos de declaração de matrícula e frequência |
-| Evidências pedagógicas | Atividades, objetivos, descrições, responsáveis e anexos |
-| Educação Especial | Registro demonstrativo de orientações pedagógicas |
-| Relatório individual | Consolidação dos registros de um estudante, filtro opcional por período e impressão/PDF |
+| Alunos | Cadastro, pesquisa por nome/EOL/RA, filtros de série e período, edição e validação de EOL duplicado |
+| Contatos | Registro de responsáveis, parentesco, telefones e prioridade |
+| Atestados | Período, tipo, abrangência do afastamento (aulas/educação física), informações administrativas e anexos |
+| Atendimentos | Descrição, participante, ação realizada, profissional e encaminhamento |
+| Ocorrências | Registro e impressão com identificação de uso demonstrativo |
+| Documentos | Anexos e modelos não oficiais de matrícula e frequência |
+| Evidências pedagógicas | Cadastro de atividade, objetivo, descrição, responsável e anexos |
+| Educação Especial | Orientações pedagógicas fictícias, sem restrição de acesso por perfil |
+| Relatório individual | Consolidação do histórico por aluno, período opcional e impressão/arquivo PDF |
 
-O relatório individual não inclui CID, laudos, anexos ou registros detalhados de Educação Especial. Os modelos de declaração não têm validade oficial; a frequência escolar não é calculada.
+A leitura de registros é vinculada ao identificador interno do estudante (`aluno_id`). A planilha contém oito abas de dados; a aba oculta `_VIDE_Config` pode guardar a referência à pasta de anexos.
 
-## Arquitetura e fluxo
-
-```text
-Interface HTML/CSS/JavaScript
-          |
-          | google.script.run
-          v
-Google Apps Script (Código.gs)
-          |
-          +-- Google Planilhas: dados e vínculos por aluno_id
-          |
-          +-- Google Drive: arquivos anexados
-```
-
-A planilha do protótipo possui oito abas de dados: **Alunos, Contatos, Atestados, Atendimentos, Ocorrencias, Anexos, Evidencias e EducacaoEspecial**. Uma aba técnica oculta, `_VIDE_Config`, pode registrar a referência à pasta de anexos.
-
-## Arquivos do projeto
-
-Após a disponibilização dos demais arquivos deste repositório, a estrutura prevista é:
+## Estrutura de código
 
 ```text
-Código.gs                 Regras de negócio, acesso aos dados, anexos e relatórios
-Index.html                Interface principal do protótipo
-appsscript.json           Manifesto do Google Apps Script
-legacy/                   Arquivos HTML auxiliares preservados
-screenshots/              Capturas das telas de teste
-docs/                     Documentação técnica e cenários de utilização
+Código.gs             Back-end: planilha, validações, CRUD, anexos e relatório
+Index.html            Interface atual, formulários e apresentação do relatório
+appsscript.json       Manifesto Apps Script: V8 e permissões
+legacy/               Arquivos HTML auxiliares preservados do projeto
+screenshots/          Capturas de testes com dados fictícios
+docs/                 Documentação, testes e considerações de segurança
 ```
 
-Os arquivos em `legacy/` foram preservados como material auxiliar e não devem ser interpretados como uma segunda interface em produção.
+O fluxo principal observado utiliza `Index.html`. Os arquivos em `legacy/` foram mantidos para referência e compatibilidade; não devem ser confundidos com outra versão da interface em execução.
 
-## Como reproduzir
+## Como reproduzir o protótipo
 
-1. Crie uma **planilha Google nova, vazia e privada**.
-2. Abra **Extensões → Apps Script**.
-3. Insira o conteúdo de `Código.gs`, crie o arquivo HTML `Index` com o conteúdo de `Index.html` e configure `appsscript.json` conforme o manifesto fornecido.
-4. Salve e execute `PrepararAmbienteDeTestes` para criar a estrutura de dados. Autorize somente as permissões solicitadas que forem compatíveis com o uso pretendido.
-5. Atualize a planilha e abra o menu **V.I.D.E. — Projeto Integrado → Abrir sistema**.
-6. Cadastre **apenas dados fictícios** e execute os cenários descritos na documentação.
+1. Crie uma **planilha Google nova, vazia e privada**. Não reutilize bases escolares reais.
+2. Na planilha, acesse **Extensões → Apps Script**.
+3. Insira o conteúdo de `Código.gs` no arquivo de script, crie/atualize o arquivo HTML com nome **Index** usando `Index.html` e configure `appsscript.json` com o manifesto fornecido. Inclua os HTML auxiliares se desejar preservar a estrutura completa.
+4. Salve e selecione **`PrepararAmbienteDeTestes`** na lista de funções. Execute uma vez; confira as abas criadas e quaisquer pedidos de autorização do Google.
+5. Recarregue a planilha; procure **V.I.D.E. — Projeto Integrado → Abrir sistema**.
+6. Cadastre **somente dados fictícios**. Siga os cenários do manual para testar cadastro, busca, anexos, relatórios e outros módulos.
 
-O primeiro envio de anexo pode criar uma pasta própria no Google Drive vinculada à planilha. A cópia da planilha **não copia automaticamente** os arquivos armazenados nessa pasta.
+A pasta de anexos no Drive é criada e vinculada à planilha quando o mecanismo de upload precisa armazenar um arquivo. Arquivos de outro projeto no Drive não são copiados automaticamente.
 
-## Imagens e documentação
+**Manual completo (explicação técnica + guia passo a passo com capturas):** [Documentação do V.I.D.E.](docs/Documentacao_Completa_VIDE.pdf)
 
-A pasta `screenshots/` reúne imagens dos módulos com dados fictícios. O manual em `docs/` documenta o desenvolvimento, as regras e um roteiro de utilização e testes.
+## Demonstração da versão integrada
 
-**Versão integrada usada nos testes:** [abrir Google Planilhas](https://docs.google.com/spreadsheets/d/1dd6w0zA1OEzZtK6L5UeVDKzPwPUZlXkCZrJefhpNfQQ/edit?gid=188152873#gid=188152873). O acesso depende das permissões concedidas na planilha; o link não torna o sistema público.
+A planilha usada nos testes tem link próprio, mas **o acesso geral estava restrito na última verificação**. O endereço não é uma autorização de acesso nem um aplicativo público:
 
-## Segurança e limitações
+[Planilha V.I.D.E. — Projeto Integrado](https://docs.google.com/spreadsheets/d/1dd6w0zA1OEzZtK6L5UeVDKzPwPUZlXkCZrJefhpNfQQ/edit?gid=188152873#gid=188152873)
 
-- Não há autorização institucional por perfil ou restrição específica de acesso por módulo.
-- Não há trilha de auditoria imutável de todas as ações.
-- As permissões dos anexos no Drive são independentes das permissões da planilha.
-- Não houve homologação institucional, ensaio formal de carga ou auditoria completa de acessibilidade e segurança.
-- Nunca publique dados escolares reais, credenciais, identificadores privados de arquivos ou exportações de planilhas com informações pessoais.
+## Limitações e proteção de dados
 
-## Autoria e créditos
+- Sem controle institucional de acesso por função ou por módulo; o menu do Sheets não substitui essa proteção.
+- Sem auditoria integral e imutável de alterações por usuário.
+- Permissões dos arquivos do Drive devem ser verificadas separadamente das da planilha.
+- CID, laudos e registros da Educação Especial **não** são incluídos no relatório individual demonstrativo.
+- Declarações são modelos acadêmicos, sem validação institucional; o sistema não calcula frequência escolar.
+- Não houve homologação da escola, auditoria completa de WCAG 2.2 nem testes formais de segurança e carga.
 
-O **V.I.D.E. é um projeto acadêmico coletivo**. A identificação nominal da equipe e das contribuições individuais deve ser confirmada com os integrantes antes de ser acrescentada aqui.
+Consulte [Segurança e limitações](docs/SEGURANCA.md), [Testes](docs/TESTES.md) e [Origem e critérios](docs/ORIGEM.md).
 
-**Status:** protótipo funcional em ambiente de testes; não homologado para uso real.
+## Autoria e publicação
+
+O V.I.D.E. é um projeto acadêmico coletivo. A inclusão do código neste pacote **não significa que ele já tenha sido publicado no GitHub**. Antes de tornar o repositório público, combinar autoria, licença e divulgação com o grupo e a instituição. Para desenvolvimento, prefira inicialmente um repositório privado.

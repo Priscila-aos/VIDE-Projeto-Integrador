@@ -1,0 +1,9 @@
+<section id="view-port" class="view" hidden>
+  <div class="back"><button class="secondary" onclick="ir('busca')">← Voltar à busca</button></div>
+  <div class="summary" id="resumoAluno"></div>
+  <div class="panel">
+    <div class="tabs"><button class="tab active" data-tab="Ocorrencias" onclick="trocarAba('Ocorrencias')">Ocorrências</button><button class="tab" data-tab="Atestados" onclick="trocarAba('Atestados')">Atestados</button><button class="tab" data-tab="Atendimentos" onclick="trocarAba('Atendimentos')">Atendimentos</button><button class="tab" data-tab="Alunos" onclick="editarAlunoAtual()">Dados do aluno</button></div>
+    <div class="stack" style="justify-content:space-between;margin-bottom:13px"><h2 id="tituloModulo" style="margin:0">Ocorrências</h2><button id="novoRegistro" class="primary" onclick="novoRegistro()">+ Nova ocorrência</button></div>
+    <div id="listaRegistros" class="records"></div>
+  </div>
+</section>

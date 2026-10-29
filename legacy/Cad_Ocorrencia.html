@@ -1,0 +1,16 @@
+<section id="view-Cad_Ocorrencia" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloOcorrencia">Nova ocorrência</h1><p class="muted" id="nomeAlunoOcorrencia"></p>
+  <form id="formOcorrencia" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col6"><label>Responsável notificado / ciente</label><input name="nome_responsavel" maxlength="150"></div>
+    <div class="col3"><label>Telefone</label><input name="telefone" maxlength="40"></div>
+    <div class="col3"><label>Data do fato *</label><input name="data" type="date" required></div>
+    <div class="col8"><label>Profissional que registra *</label><input name="responsavel_registro" required maxlength="150"></div>
+    <div class="col4"><label>RF / matrícula</label><input name="rf_registro" maxlength="40"></div>
+    <div class="col12"><label>Relato objetivo *</label><textarea name="relato" required maxlength="4000"></textarea></div>
+    <div class="col12"><label>Estratégia / mediação</label><textarea name="estrategia" maxlength="4000"></textarea></div>
+    <div class="col12"><label>Encaminhamento / resolução</label><textarea name="encaminhamento" maxlength="4000"></textarea></div>
+    <div class="col12 actions"><button class="secondary" type="reset">Limpar</button><button class="primary" type="submit">Salvar ocorrência</button></div>
+  </form></div>
+</section>

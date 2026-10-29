@@ -1,0 +1,14 @@
+<section id="view-Cad_Atestado" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloAtestado">Novo atestado / afastamento</h1><p class="muted" id="nomeAlunoAtestado"></p>
+  <p class="help">Versão de testes: registra apenas datas e observações gerais. Não anexa documentos, laudos nem CID.</p>
+  <form id="formAtestado" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col4"><label>Data inicial *</label><input type="date" name="data_inicio" required></div>
+    <div class="col4"><label>Data final *</label><input type="date" name="data_fim" required></div>
+    <div class="col4"><label>Tipo *</label><select name="tipo" required><option value="">Selecione</option><option>Afastamento de aulas</option><option>Dispensa de educação física</option><option>Outro afastamento</option></select></div>
+    <div class="col12"><label>Observação administrativa (sem informações de saúde)</label><textarea name="observacao" maxlength="2000"></textarea></div>
+    <div class="col12"><label>Registrado por</label><input name="registrado_por" maxlength="150"></div>
+    <div class="col12 actions"><button class="primary" type="submit">Salvar registro</button></div>
+  </form></div>
+</section>

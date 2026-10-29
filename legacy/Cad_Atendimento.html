@@ -1,0 +1,13 @@
+<section id="view-Cad_Atendimento" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloAtendimento">Novo atendimento</h1><p class="muted" id="nomeAlunoAtendimento"></p>
+  <form id="formAtendimento" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col4"><label>Data *</label><input type="date" name="data" required></div>
+    <div class="col8"><label>Tipo *</label><input name="tipo" maxlength="130" required placeholder="Ex.: Atendimento à família"></div>
+    <div class="col12"><label>Descrição *</label><textarea name="descricao" maxlength="4000" required></textarea></div>
+    <div class="col6"><label>Profissional responsável</label><input name="responsavel_registro" maxlength="150"></div>
+    <div class="col6"><label>Encaminhamento</label><input name="encaminhamento" maxlength="300"></div>
+    <div class="col12 actions"><button class="primary" type="submit">Salvar atendimento</button></div>
+  </form></div>
+</section>

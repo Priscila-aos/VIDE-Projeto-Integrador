@@ -1,0 +1,14 @@
+<section id="view-Cad_Aluno" class="view" hidden>
+  <button class="secondary back" onclick="voltarDoAluno()">← Voltar</button>
+  <div class="panel"><h1 id="tituloAluno">Cadastrar estudante fictício</h1>
+    <form id="formAluno" class="grid">
+      <input type="hidden" name="_id" id="alunoRegistroId">
+      <div class="col8"><label for="alunoNome">Nome *</label><input id="alunoNome" name="nome" required maxlength="150"></div>
+      <div class="col4"><label for="alunoEol">EOL *</label><input id="alunoEol" name="eol" required maxlength="35"></div>
+      <div class="col4"><label>RA</label><input name="ra" maxlength="35"></div><div class="col4"><label>Série</label><input name="serie" maxlength="65"></div><div class="col4"><label>Turma</label><input name="turma" maxlength="35"></div>
+      <div class="col4"><label>Período</label><select name="periodo"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+      <div class="col4"><label>Situação</label><select name="situacao"><option>Matriculado</option><option>Transferido</option><option>Inativo</option></select></div>
+      <div class="col4"><label>Responsável</label><input name="responsavel" maxlength="150"></div><div class="col6"><label>Telefone</label><input name="telefone" maxlength="40"></div>
+      <div class="col12 actions"><button class="primary" type="submit">Salvar estudante</button></div>
+    </form></div>
+</section>

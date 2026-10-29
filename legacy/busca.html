@@ -1,0 +1,13 @@
+<section id="view-busca" class="view">
+  <h1>Busca de estudantes</h1>
+  <p class="muted">Localize um estudante para acessar seu portfólio ou cadastrar um novo estudante fictício.</p>
+  <div class="panel">
+    <form id="formBusca" class="grid">
+      <div class="col6"><label for="termo">Nome do aluno, EOL ou RA</label><input id="termo" placeholder="Nome ou identificação"></div>
+      <div class="col3"><label for="serieFiltro">Ano / série</label><input id="serieFiltro" placeholder="Ex.: 1º Ano"></div>
+      <div class="col3"><label for="periodoFiltro">Período</label><select id="periodoFiltro"><option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button></div>
+    </form>
+  </div>
+  <div class="panel"><h2>Resultados <span class="pill" id="contagem">0 encontrados</span></h2><div class="table-scroll"><table><thead><tr><th>EOL / RA</th><th>Nome</th><th>Série</th><th>Turma</th><th>Período</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="resultadoAlunos"></tbody></table></div></div>
+</section>

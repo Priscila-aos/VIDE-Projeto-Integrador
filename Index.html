@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><base target="_top"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V.I.D.E. — Projeto Integrado</title>
+<style>
+  :root { --blue:#17477d; --blue2:#0d65a6; --border:#dbe3ee; --txt:#1e293b; --muted:#526174; --bg:#f4f7fb; --green:#187a57; }
+  * { box-sizing:border-box; }
+  body {font: 14px/1.48 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--txt);background:var(--bg);margin:0;}
+  .topbar {background:var(--blue);padding:14px 22px;color:white;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .topbar strong{font-size:21px;letter-spacing:.08em;margin-right:12px;}.subbrand{opacity:.85}
+  .tag{border-radius:5px;background:#fce5b4;color:#51380d;padding:6px 9px;font-size:11px;font-weight:700;}
+  .wrapper{padding:18px 22px;max-width:1200px;margin:auto;}.view[hidden],[hidden]{display:none!important;}
+  h1{margin:0 0 8px;font-size:24px;color:#123b68}h2{font-size:17px;color:#173e67;margin:0 0 15px}p{margin:0 0 12px}
+  .panel {background:white;padding:20px;margin:0 0 16px;border-radius:12px;border:1px solid var(--border);box-shadow:0 5px 18px #1536570d;}
+  .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;}
+  .col3{grid-column:span 3}.col4{grid-column:span 4}.col6{grid-column:span 6}.col8{grid-column:span 8}.col12{grid-column:span 12}
+  label{display:block;font-weight:650;font-size:12px;margin-bottom:5px;color:#344559}input,textarea,select{width:100%;padding:9px 10px;border:1px solid #bfcbd9;border-radius:7px;font:inherit;background:#fff;color:#152639;}
+  textarea{min-height:90px;resize:vertical}input:focus,textarea:focus,select:focus{outline:2px solid #89bff6;outline-offset:1px}
+  button{font:inherit;cursor:pointer;border:1px solid transparent;border-radius:7px;padding:9px 14px;font-weight:600;}
+  button:disabled{opacity:.55;cursor:wait}.primary{background:var(--blue2);color:white}.dark{background:#263f5d;color:white}.secondary{background:white;color:#245d94;border-color:#adc1d5}.danger{background:white;color:#ad263d;border-color:#f0bac3}.success{background:var(--green);color:white}
+  /* Ação principal destacada e ações secundárias com contraste e hierarquia previsíveis. */
+  .edit-student{background:#17477d;color:#fff;border-color:#17477d;box-shadow:0 2px 6px #17477d26;font-weight:700}
+  .edit-student:hover,.edit-student:focus-visible{background:#103760;border-color:#103760}
+  .action-edit{background:#edf5ff;color:#17477d;border:1px solid #9cbce0}
+  .action-attach{background:#fff;color:#175e84;border:1px solid #8bbacb}
+  .action-print{background:#eef4fa;color:#1a4d77;border:1px solid #9fb5d0}
+  .action-edit:hover,.action-attach:hover,.action-print:hover{background:#e1edfa;border-color:#537fae}
+  .danger:hover{background:#fff0f2;border-color:#d77d8d}
+  button:focus-visible,.filelinks a:focus-visible{outline:3px solid #f6a729;outline-offset:2px}
+  .record .stack button,.filelinks a,.filelinks button{min-height:38px;display:inline-flex;align-items:center;justify-content:center;padding:8px 12px}
+
+  .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}.stack{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .table-scroll{width:100%;overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}th{background:#edf3fa;color:#334a60;font-weight:700}td button{margin:1px;padding:5px 8px;font-size:12px}
+  .pill{background:#eaf3fb;color:#17477d;padding:3px 8px;border-radius:30px;font-size:12px;font-weight:650;display:inline-block}
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}.tab{border:1px solid var(--border);background:#fff;color:#344559}.tab.active{background:#17477d;color:white}
+  .records{display:grid;gap:10px}.record{border:1px solid var(--border);border-left:4px solid #3b8aca;padding:12px;border-radius:8px;background:#fbfdff}.record h3{font-size:14px;margin:0 0 5px}
+  .aviso{background:#edf7ff;color:#183f63;border:1px solid #c9e7fc;border-radius:8px;padding:11px 14px;margin-bottom:15px}.aviso.erro{background:#fff0f0;color:#972539;border-color:#f3c8cc}
+  .help{font-size:12px;color:var(--muted);margin-top:5px}.back{margin:0 0 13px}.empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--border);border-radius:8px}
+  .summary{background:linear-gradient(115deg,#0c5a9a,#184374);padding:18px;border-radius:9px;color:#fff;margin-bottom:16px}.summary h1{color:#fff;margin:0 0 6px}.summary small{opacity:.9}
+  @media(max-width:760px){.wrapper{padding:10px}.topbar{align-items:flex-start;flex-direction:column}.col3,.col4,.col6,.col8{grid-column:span 12}.panel{padding:14px}table{font-size:12px}}
+
+  .filebox{border:1px dashed #9caec5;padding:14px;border-radius:9px;margin:12px 0;background:#f8fbff}
+  .filebox input{max-width:550px}.record p{overflow-wrap:anywhere}
+  .special{background:#fff8e6;border:1px solid #efd99c;border-radius:8px;padding:12px;margin:12px 0}
+  .filelinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filelinks a{border:1px solid #9cbce0;border-radius:7px;color:#17477d;background:#edf5ff;text-decoration:none;font-weight:600}.filelinks a:hover{background:#e1edfa}
+</style>
+
+</head>
+<body><header class="topbar"><div><strong>V.I.D.E.</strong><span class="subbrand">Visibilidade de Dados Estudantis</span></div>
+<span class="tag">PROTÓTIPO ACADÊMICO — SOMENTE DADOS FICTÍCIOS</span></header>
+<main class="wrapper"><div id="aviso" class="aviso" role="alert" aria-live="polite" hidden></div>
+<section id="view-busca" class="view">
+  <h1>Busca de estudantes</h1>
+  <p class="muted">Localize um estudante para acessar seu portfólio ou cadastrar um novo estudante fictício.</p>
+  <div class="panel">
+    <form id="formBusca" class="grid">
+      <div class="col6"><label for="termo">Nome do aluno, EOL ou RA</label><input id="termo" placeholder="Nome ou identificação"></div>
+      <div class="col3"><label for="serieFiltro">Ano / série</label><input id="serieFiltro" placeholder="Ex.: 1º Ano"></div>
+      <div class="col3"><label for="periodoFiltro">Período</label><select id="periodoFiltro"><option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button></div>
+    </form>
+  </div>
+  <div class="panel"><h2>Resultados <span class="pill" id="contagem">0 encontrados</span></h2><div class="table-scroll"><table><thead><tr><th>EOL / RA</th><th>Nome</th><th>Série</th><th>Turma</th><th>Período</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="resultadoAlunos"></tbody></table></div></div>
+</section>
+
+<section id="view-port" class="view" hidden>
+  <div class="back"><button class="secondary" onclick="ir('busca')">← Voltar à busca</button></div>
+  <div class="summary" id="resumoAluno"></div>
+  <div class="panel"><div class="stack" style="justify-content:space-between;margin-bottom:10px">
+    <strong>Portfólio do estudante</strong><div class="stack"><button class="primary edit-student" onclick="editarAlunoAtual()">✎ Editar dados do estudante</button><button class="secondary" onclick="abrirRelatorio()">Relatório individual</button><button class="danger" onclick="excluirAlunoAtual()">Excluir aluno fictício</button></div>
+  </div>
+    <div class="tabs">
+      <button class="tab" data-tab="Contatos" onclick="trocarAba('Contatos')">Contatos</button>
+      <button class="tab" data-tab="Atestados" onclick="trocarAba('Atestados')">Atestados</button>
+      <button class="tab" data-tab="Atendimentos" onclick="trocarAba('Atendimentos')">Registros</button>
+      <button class="tab" data-tab="Ocorrencias" onclick="trocarAba('Ocorrencias')">Ocorrências</button>
+      <button class="tab" data-tab="Documentos" onclick="trocarAba('Documentos')">Documentos</button>
+      <button class="tab" data-tab="Evidencias" onclick="trocarAba('Evidencias')">Evidências</button>
+      <button class="tab" data-tab="EducacaoEspecial" onclick="trocarAba('EducacaoEspecial')">Educação especial</button>
+    </div>
+    <div class="stack" style="justify-content:space-between;margin-bottom:13px"><h2 id="tituloModulo" style="margin:0">Contatos</h2><button id="novoRegistro" class="primary" onclick="novoRegistro()">+ Novo contato</button></div>
+    <div id="listaRegistros" class="records"></div>
+  </div>
+  <div id="gerenciadorAnexos" class="panel" hidden>
+    <div class="stack" style="justify-content:space-between"><h2 id="tituloAnexos">Anexos</h2><button class="secondary" onclick="fecharAnexos()">Fechar anexos</button></div>
+    <p class="help">Arquivos fictícios PDF, PNG ou JPG de até 5 MB. O Drive mantém suas permissões; o link não torna o arquivo público.</p>
+    <div class="filebox"><input id="arquivoAnexo" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+      <div class="actions"><button class="primary" id="botaoEnviarArquivo" onclick="enviarAnexo()">Enviar arquivo</button></div>
+    </div>
+    <div id="listaAnexos" class="records"></div>
+  </div>
+</section>
+<section id="view-Cad_Aluno" class="view" hidden>
+  <button class="secondary back" onclick="voltarDoAluno()">← Voltar</button>
+  <div class="panel"><h1 id="tituloAluno">Cadastrar estudante fictício</h1>
+    <form id="formAluno" class="grid">
+      <input type="hidden" name="_id" id="alunoRegistroId">
+      <div class="col8"><label for="alunoNome">Nome *</label><input id="alunoNome" name="nome" required maxlength="150"></div>
+      <div class="col4"><label for="alunoEol">EOL *</label><input id="alunoEol" name="eol" required maxlength="35"></div>
+      <div class="col4"><label>RA</label><input name="ra" maxlength="35"></div><div class="col4"><label>Série</label><input name="serie" maxlength="65"></div><div class="col4"><label>Turma</label><input name="turma" maxlength="35"></div>
+      <div class="col4"><label>Período</label><select name="periodo"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+      <div class="col4"><label>Situação</label><select name="situacao"><option>Matriculado</option><option>Transferido</option><option>Inativo</option><option>Desistente</option><option>Outros</option></select></div>
+      <div class="col4"><label>Responsável</label><input name="responsavel" maxlength="150"></div><div class="col6"><label>Telefone</label><input name="telefone" maxlength="40"></div>
+
+      <div class="col4"><label>Código INEP (confirmar uso)</label><input name="codigo_inep" maxlength="35"></div>
+      <div class="col4"><label>Número na chamada</label><input type="number" min="0" name="numero_chamada"></div>
+      <div class="col4"><label>Filiação</label><input name="filiacao" maxlength="200"></div>
+      <div class="col4"><label>Data de nascimento</label><input type="date" name="data_nascimento"></div>
+      <div class="col4"><label>Data de matrícula</label><input type="date" name="data_matricula"></div>
+      <div class="col4"><label>Escola de origem</label><input name="origem" maxlength="150"></div>
+      <div class="col4"><label>Ensino</label><input name="ensino" maxlength="100" placeholder="Ex.: Regular"></div>
+      <div class="col4"><label>TEG / Transporte</label><input name="teg" maxlength="100"></div>
+      <div class="col12 actions"><button class="primary" type="submit">Salvar estudante</button></div>
+    </form></div>
+</section>
+
+<section id="view-Cad_Atestado" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloAtestado">Novo atestado / afastamento</h1><p class="muted" id="nomeAlunoAtestado"></p>
+  <p class="help">Os anexos são incluídos após salvar o atestado, pelo botão Anexos do registro no portfólio. Use somente documentos fictícios.</p>
+  <form id="formAtestado" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col4"><label>Data inicial *</label><input type="date" name="data_inicio" required></div>
+    <div class="col4"><label>Data final *</label><input type="date" name="data_fim" required></div>
+    <div class="col4"><label>Tipo *</label><select name="tipo" required><option value="">Selecione</option><option>Afastamento de aulas</option><option>Dispensa de educação física</option><option>Outro afastamento</option><option>Médico</option><option>Odontológico</option><option>Declaração de Comparecimento</option></select></div>
+
+    <div class="col4"><label>Afastamento referente a</label><select name="abrangencia"><option value="">Não informado</option><option>Aulas</option><option>Educação física</option><option>Aulas e educação física</option></select></div>
+    <div class="col4"><label>Número de dias</label><input name="numero_dias" type="number" min="1" required placeholder="Ex.: 3"></div>
+    <div class="col4"><label>CID (quando aplicável)</label><input name="cid" maxlength="30"></div>
+    <div class="col12"><label>Motivo / Conteúdo resumido</label><textarea name="conteudo" maxlength="2000" required></textarea></div>
+    <div class="col12"><label>Observações adicionais</label><textarea name="observacao" maxlength="2000"></textarea></div>
+    <div class="col12"><label>Registrado por</label><input name="registrado_por" maxlength="150"></div>
+    <div class="col12 actions"><button class="primary" type="submit">Salvar registro</button></div>
+  </form></div>
+</section>
+
+<section id="view-Cad_Ocorrencia" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloOcorrencia">Nova ocorrência</h1><p class="muted" id="nomeAlunoOcorrencia"></p>
+  <form id="formOcorrencia" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col6"><label>Responsável notificado / ciente</label><input name="nome_responsavel" maxlength="150"></div>
+    <div class="col3"><label>Telefone</label><input name="telefone" maxlength="40"></div>
+    <div class="col3"><label>Data do fato *</label><input name="data" type="date" required></div>
+    <div class="col8"><label>Profissional que registra *</label><input name="responsavel_registro" required maxlength="150"></div>
+    <div class="col4"><label>RF / matrícula</label><input name="rf_registro" maxlength="40"></div>
+    <div class="col12"><label>Relato objetivo *</label><textarea name="relato" required maxlength="4000"></textarea></div>
+    <div class="col12"><label>Estratégia / mediação</label><textarea name="estrategia" maxlength="4000"></textarea></div>
+    <div class="col12"><label>Encaminhamento / resolução</label><textarea name="encaminhamento" maxlength="4000"></textarea></div>
+    <div class="col12 actions"><button class="secondary" type="reset">Limpar</button><button class="primary" type="submit">Salvar ocorrência</button></div>
+  </form></div>
+</section>
+
+<section id="view-Cad_Atendimento" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloAtendimento">Novo atendimento</h1><p class="muted" id="nomeAlunoAtendimento"></p>
+  <form id="formAtendimento" class="grid">
+    <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+    <div class="col4"><label>Data *</label><input type="date" name="data" required></div>
+    <div class="col8"><label>Tipo *</label><input name="tipo" maxlength="130" required placeholder="Ex.: Atendimento à família"></div>
+    <div class="col12"><label>Descrição *</label><textarea name="descricao" maxlength="4000" required></textarea></div>
+    <div class="col6"><label>Profissional responsável</label><input name="responsavel_registro" maxlength="150"></div>
+    <div class="col6"><label>Encaminhamento</label><input name="encaminhamento" maxlength="300"></div>
+
+    <div class="col6"><label>Nome do responsável / participante *</label><input name="nome_responsavel" maxlength="150" required></div>
+    <div class="col12"><label>Ação realizada *</label><textarea name="acao_realizada" maxlength="2500" required></textarea></div>
+    <div class="col12"><label>Observações complementares</label><textarea name="observacao" maxlength="2000"></textarea></div>
+    <div class="col12 actions"><button class="primary" type="submit">Salvar atendimento</button></div>
+  </form></div>
+</section>
+
+<section id="view-Cad_Contato" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloContato">Novo contato de emergência</h1><p class="muted" id="nomeAlunoContato"></p>
+    <form id="formContato" class="grid">
+      <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+      <div class="col6"><label>Nome completo *</label><input name="nome" required maxlength="150"></div>
+      <div class="col3"><label>Parentesco / vínculo *</label><input name="parentesco" required maxlength="80"></div>
+      <div class="col3"><label>Telefone *</label><input name="telefone" required maxlength="40"></div>
+      <div class="col4"><label>WhatsApp</label><input name="whatsapp" maxlength="40"></div>
+      <div class="col4"><label>E-mail</label><input name="email" type="email" maxlength="180"></div>
+      <div class="col4"><label>Prioridade</label><select name="prioridade"><option>Principal</option><option>Secundário</option><option>Outro</option></select></div>
+      <div class="col12"><label>Observações</label><textarea name="observacao" maxlength="2000"></textarea></div>
+      <div class="col12 actions"><button class="primary" type="submit">Salvar contato</button></div>
+    </form>
+  </div>
+</section>
+
+<section id="view-Cad_Evidencia" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloEvidencia">Nova evidência pedagógica</h1><p class="muted" id="nomeAlunoEvidencia"></p>
+    <p class="help">Registre apenas dados fictícios e evidências autorizadas para demonstração. Os anexos são enviados após salvar.</p>
+    <form id="formEvidencia" class="grid">
+      <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+      <div class="col4"><label>Data *</label><input type="date" name="data" required></div>
+      <div class="col8"><label>Atividade *</label><input name="atividade" maxlength="150" required></div>
+      <div class="col12"><label>Objetivo pedagógico</label><textarea name="objetivo" maxlength="2000"></textarea></div>
+      <div class="col12"><label>Descrição da evidência *</label><textarea name="descricao" maxlength="3500" required></textarea></div>
+      <div class="col6"><label>Profissional responsável *</label><input name="responsavel_registro" maxlength="150" required></div>
+      <div class="col12"><label>Observações</label><textarea name="observacao" maxlength="2000"></textarea></div>
+      <div class="col12 actions"><button class="primary" type="submit">Salvar evidência</button></div>
+    </form>
+  </div>
+</section>
+<section id="view-Cad_EducacaoEspecial" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1 id="tituloEducacaoEspecial">Nova orientação pedagógica</h1><p class="muted" id="nomeAlunoEducacaoEspecial"></p>
+    <div class="special"><b>Apenas demonstração com dados fictícios.</b> Este protótipo ainda não tem controle de acesso específico para documentos de Educação Especial. Não inclua laudos ou informações reais.</div>
+    <form id="formEducacaoEspecial" class="grid">
+      <input type="hidden" name="_id"><input type="hidden" name="aluno_id">
+      <div class="col4"><label>Data *</label><input type="date" name="data" required></div>
+      <div class="col8"><label>Categoria do registro *</label><select name="tipo_documento" required><option value="">Selecione</option><option>Orientação pedagógica</option><option>Plano de acompanhamento (fictício)</option><option>Registro de adaptação pedagógica</option><option>Outro documento fictício</option></select></div>
+      <div class="col12"><label>Orientações pedagógicas *</label><textarea name="orientacao" maxlength="3000" required></textarea></div>
+      <div class="col6"><label>Profissional responsável *</label><input name="responsavel_registro" maxlength="150" required></div>
+      <div class="col12"><label>Observações</label><textarea name="observacao" maxlength="2000"></textarea></div>
+      <div class="col12 actions"><button class="primary" type="submit">Salvar orientação</button></div>
+    </form>
+  </div>
+</section>
+<section id="view-relatorio" class="view" hidden>
+  <button class="secondary back" onclick="ir('port')">← Voltar ao portfólio</button>
+  <div class="panel"><h1>Relatório individual — demonstração</h1><p class="muted" id="nomeAlunoRelatorio"></p>
+    <p>O relatório reúne dados cadastrais, contatos, atendimentos, ocorrências, períodos de afastamento e evidências pedagógicas. Não inclui CID, laudos, arquivos ou registros de Educação Especial.</p>
+    <form id="formRelatorio" class="grid">
+      <div class="col4"><label for="relInicio">Data inicial (opcional)</label><input id="relInicio" name="inicio" type="date"></div>
+      <div class="col4"><label for="relFim">Data final (opcional)</label><input id="relFim" name="fim" type="date"></div>
+      <div class="col12 actions"><button class="primary" type="submit">Gerar relatório / Salvar como PDF</button></div>
+    </form>
+    <p class="help">Relatório demonstrativo para uso acadêmico, não é documento escolar oficial. Os contatos não são filtrados por data.</p>
+  </div>
+</section>
+</main>
+<script>
+'use strict';
+// V.I.D.E. — telas integradas. Dados de demonstração, não utilizar dados reais.
+const app={aluno:null,modulo:'Contatos',tela:'busca',anexo:null};
+const FORMULARIOS={Alunos:'formAluno',Contatos:'formContato',Atestados:'formAtestado',Atendimentos:'formAtendimento',Ocorrencias:'formOcorrencia',Evidencias:'formEvidencia',EducacaoEspecial:'formEducacaoEspecial'};
+const PAGINAS={Alunos:'Cad_Aluno',Contatos:'Cad_Contato',Atestados:'Cad_Atestado',Atendimentos:'Cad_Atendimento',Ocorrencias:'Cad_Ocorrencia',Evidencias:'Cad_Evidencia',EducacaoEspecial:'Cad_EducacaoEspecial'};
+const ROTULOS={Contatos:'contato',Atestados:'atestado',Atendimentos:'atendimento',Ocorrencias:'ocorrência',Documentos:'documento',Evidencias:'evidência pedagógica',EducacaoEspecial:'orientação pedagógica'};
+let buscaSeq=0,abaSeq=0,alunoSeq=0,anexoSeq=0;
+const e=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v.slice(8,10)+'/'+v.slice(5,7)+'/'+v.slice(0,4):e(v||'—');
+function hojeLocal(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function aviso(msg,erro=false){const b=document.getElementById('aviso');b.hidden=!msg;b.className=erro?'aviso erro':'aviso';b.textContent=msg||'';}
+function pedir(fn,...args){return new Promise((resolve,reject)=>{if(typeof google==='undefined'||!google.script||!google.script.run){reject(new Error('Abra pelo menu da planilha.'));return;}
+ google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](...args);});}
+async function executar(fn){try{aviso('');return await fn();}catch(err){aviso(err?.message||String(err),true);return null;}}
+function ir(pag){if(pag==='port'&&!app.aluno)return ir('busca');if(pag==='busca')fecharAnexos();app.tela=pag;document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!=='view-'+pag);if(pag==='busca')buscar();if(pag==='port')renderizarPortfolio();window.scrollTo(0,0);}
+function dadosForm(id){return Object.fromEntries(new FormData(document.getElementById(id)).entries());}
+function preencherForm(id,obj){const form=document.getElementById(id);form.reset();Object.entries(obj||{}).forEach(([k,v])=>{const input=form.elements.namedItem(k);if(input&&'value'in input)input.value=String(v??'');});}
+async function buscar(){const seq=++buscaSeq;const filtros={termo:document.getElementById('termo').value,serie:document.getElementById('serieFiltro').value,periodo:document.getElementById('periodoFiltro').value};
+const r=await executar(()=>pedir('pesquisarAlunos',filtros));if(seq!==buscaSeq||app.tela!=='busca'||!r)return;
+document.getElementById('contagem').textContent=r.total+' encontrados';const corpo=document.getElementById('resultadoAlunos');
+corpo.innerHTML=r.alunos.length?r.alunos.map(a=>`<tr><td>${e(a.eol)}<div class="muted">${e(a.ra)}</div></td><td><strong>${e(a.nome)}</strong></td><td>${e(a.serie)}</td><td>${e(a.turma)}</td><td>${e(a.periodo)}</td><td>${e(a.situacao)}</td><td><button class="primary" data-acao="abrir-aluno" data-id="${e(a._id)}">Ver detalhes</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Nenhum estudante encontrado.</td></tr>';}
+async function abrirAluno(id){const seq=++alunoSeq;const a=await executar(()=>pedir('obterAluno',id));if(!a||seq!==alunoSeq||app.tela!=='busca')return;app.aluno=a;app.modulo='Contatos';ir('port');}
+function renderizarPortfolio(){if(!app.aluno)return;const a=app.aluno;if(app.anexo&&app.anexo.aluno_id!==a._id)fecharAnexos();
+document.getElementById('resumoAluno').innerHTML=`<h1>${e(a.nome)}</h1><small>EOL: ${e(a.eol)} | RA: ${e(a.ra)} | Série: ${e(a.serie)} | Turma: ${e(a.turma)} | Período: ${e(a.periodo)} | Situação: ${e(a.situacao)}</small>`;
+trocarAba(app.modulo);}
+function infoReg(m,r){if(m==='Contatos')return `<p><b>Parentesco:</b> ${e(r.parentesco)} | <b>Telefone:</b> ${e(r.telefone)} | <b>WhatsApp:</b> ${e(r.whatsapp)} | <b>E-mail:</b> ${e(r.email)} | <b>Prioridade:</b> ${e(r.prioridade)}</p><p>${e(r.observacao)}</p>`;
+if(m==='Atestados')return `<p><b>Período:</b> ${fd(r.data_inicio)} a ${fd(r.data_fim)} | <b>Dias:</b> ${e(r.numero_dias)} | <b>CID:</b> ${e(r.cid)} | <b>Afastamento:</b> ${e(r.abrangencia||'Não informado')}</p><p><b>Motivo:</b> ${e(r.conteudo)} | <b>Observações:</b> ${e(r.observacao)}</p>`;
+if(m==='Atendimentos')return `<p><b>Data:</b> ${fd(r.data)} | <b>Participante:</b> ${e(r.nome_responsavel)}</p><p><b>Descrição:</b> ${e(r.descricao)} | <b>Ação:</b> ${e(r.acao_realizada)}</p><p><b>Encaminhamento:</b> ${e(r.encaminhamento)} | <b>Observação:</b> ${e(r.observacao)}</p>`;
+if(m==='Evidencias')return `<p><b>Data:</b> ${fd(r.data)} | <b>Objetivo:</b> ${e(r.objetivo)}</p><p><b>Descrição:</b> ${e(r.descricao)}</p><p><b>Responsável:</b> ${e(r.responsavel_registro)} | <b>Observações:</b> ${e(r.observacao)}</p>`;
+if(m==='EducacaoEspecial')return `<p><b>Data:</b> ${fd(r.data)} | <b>Orientações:</b> ${e(r.orientacao)}</p><p><b>Responsável:</b> ${e(r.responsavel_registro)} | <b>Observações:</b> ${e(r.observacao)}</p><p class="help">Somente demonstração fictícia; sem controle de acesso por perfil.</p>`;
+return `<p><b>Data:</b> ${fd(r.data)} | <b>Registrado por:</b> ${e(r.responsavel_registro)} | <b>RF:</b> ${e(r.rf_registro)}</p><p><b>Relato:</b> ${e(r.relato)}</p><p><b>Estratégia:</b> ${e(r.estrategia)}</p><p><b>Encaminhamento:</b> ${e(r.encaminhamento)}</p>`;}
+function cardAnexo(a){return `<article class="record"><strong>${e(a.nome)}</strong> <span class="muted">(${e(a.modulo)}) — ${e(a.criado_em)}</span><div class="filelinks">
+<a href="${e(a.visualizar)}" target="_blank" rel="noopener">Visualizar</a><a href="${e(a.baixar)}" target="_blank" rel="noopener">Baixar</a>
+<button class="action-attach" data-acao="substituir-anexo" data-id="${e(a._id)}">Substituir</button><button class="danger" data-acao="excluir-anexo" data-id="${e(a._id)}">Excluir</button></div></article>`;}
+async function trocarAba(modulo){if(!app.aluno||!['Contatos','Atestados','Atendimentos','Ocorrencias','Documentos','Evidencias','EducacaoEspecial'].includes(modulo))return;
+const seq=++abaSeq,idAluno=app.aluno._id;app.modulo=modulo;if(app.anexo&&app.anexo.modulo!==modulo)fecharAnexos();
+document.querySelectorAll('button[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===modulo));
+document.getElementById('tituloModulo').textContent=modulo==='Atendimentos'?'Registros':modulo==='EducacaoEspecial'?'Educação especial':modulo==='Evidencias'?'Evidências pedagógicas':modulo;
+const btn=document.getElementById('novoRegistro');btn.textContent=modulo==='Documentos'?'+ Anexar documento':'+ Novo '+ROTULOS[modulo];
+const lista=document.getElementById('listaRegistros');lista.innerHTML='<p class="muted">Carregando...</p>';
+if(modulo==='Documentos'){
+ const anexos=await executar(()=>pedir('listarAnexos',idAluno,'Documentos',''));
+ if(seq!==abaSeq||app.tela!=='port'||!app.aluno||app.aluno._id!==idAluno)return;
+ lista.innerHTML=`<div class="special"><b>Declarações — modelos de demonstração</b><p>Não possuem validade oficial nem comprovam frequência real. Gerar para apresentação, não para uso na escola.</p><div class="stack"><button class="secondary" data-acao="declaracao" data-tipo="matricula">Modelo de matrícula</button><button class="secondary" data-acao="declaracao" data-tipo="frequencia">Modelo de frequência</button></div></div>`+
+ (anexos?.length?anexos.map(cardAnexo).join(''):'<div class="empty">Nenhum documento anexado.</div>');return;
+}
+if(modulo==='EducacaoEspecial'){
+  lista.innerHTML='<div class="special"><b>Atenção:</b> este módulo demonstra a estrutura com dados fictícios. Não possui restrição de acesso por perfil e não pode receber documentos reais.</div>';
+}
+const regs=await executar(()=>pedir('listarRegistros',modulo,idAluno));
+if(seq!==abaSeq||app.tela!=='port'||!app.aluno||app.aluno._id!==idAluno||app.modulo!==modulo)return;
+if(!regs){lista.innerHTML='';return;}
+lista.innerHTML=(modulo==='EducacaoEspecial'?'<div class="special"><b>Uso demonstrativo:</b> sem permissões por perfil. Não anexe informações reais de estudantes.</div>':'')+(regs.length?regs.map(r=>{
+ const titulo=modulo==='Contatos'?r.nome:modulo==='Atestados'?r.tipo:modulo==='Atendimentos'?r.tipo:modulo==='Evidencias'?r.atividade:modulo==='EducacaoEspecial'?r.tipo_documento:(r.relato||'Ocorrência').slice(0,120);
+ return `<article class="record"><h3>${e(titulo)}</h3>${infoReg(modulo,r)}<div class="stack"><button class="action-edit" data-acao="editar-registro" data-id="${e(r._id)}">Editar</button>
+<button class="danger" data-acao="excluir-registro" data-id="${e(r._id)}">Excluir</button>`+
+ (modulo==='Contatos'?'':`<button class="action-attach" data-acao="anexos" data-modulo="${e(modulo)}" data-id="${e(r._id)}">Anexos</button>`)+
+ (modulo==='Ocorrencias'?`<button class="action-print" data-acao="imprimir" data-id="${e(r._id)}">Imprimir ocorrência</button>`:'')+'</div></article>';}).join(''):'<div class="empty">Nenhum registro cadastrado para este estudante.</div>');
+}
+function novoRegistro(){if(!app.aluno)return aviso('Selecione um estudante.',true);const m=app.modulo;if(m==='Documentos'){abrirAnexos('Documentos','');return;}
+const form=FORMULARIOS[m];preencherForm(form,{_id:'',aluno_id:app.aluno._id});
+if(['Ocorrencias','Atendimentos','Evidencias','EducacaoEspecial'].includes(m))document.getElementById(form).elements.namedItem('data').value=hojeLocal();
+if(m==='Atestados'){document.getElementById(form).elements.namedItem('data_inicio').value=hojeLocal();document.getElementById(form).elements.namedItem('data_fim').value=hojeLocal();}
+const suf={Contatos:'Contato',Atestados:'Atestado',Atendimentos:'Atendimento',Ocorrencias:'Ocorrencia',Evidencias:'Evidencia',EducacaoEspecial:'EducacaoEspecial'}[m];
+document.getElementById('nomeAluno'+suf).textContent='Aluno: '+app.aluno.nome;
+document.getElementById('titulo'+suf).textContent='Novo '+ROTULOS[m];ir(PAGINAS[m]);}
+async function editarRegistro(id){const m=app.modulo,r=await executar(()=>pedir('obterRegistro',m,id));if(!r||!app.aluno||r.aluno_id!==app.aluno._id)return;
+novoRegistro();preencherForm(FORMULARIOS[m],r);const suf={Contatos:'Contato',Atestados:'Atestado',Atendimentos:'Atendimento',Ocorrencias:'Ocorrencia',Evidencias:'Evidencia',EducacaoEspecial:'EducacaoEspecial'}[m];
+document.getElementById('titulo'+suf).textContent='Editar '+ROTULOS[m];}
+async function excluirRegistroDaTela(id){const m=app.modulo;if(!confirm('Excluir este registro fictício? Não será possível desfazer.'))return;
+const r=await executar(()=>pedir('excluirRegistro',m,id));if(r?.sucesso){aviso('Registro excluído.');trocarAba(m);}}
+async function salvarModulo(ev,m){ev.preventDefault();const b=ev.currentTarget.querySelector('[type=submit]');b.disabled=true;
+try{const r=await executar(()=>pedir('salvarRegistro',m,dadosForm(FORMULARIOS[m])));if(!r?.sucesso)return;
+aviso('Registro '+r.acao+' com sucesso.');if(m==='Alunos'){const a=await executar(()=>pedir('obterAluno',r.id));if(a){app.aluno=a;app.modulo='Contatos';ir('port');}}else ir('port');}finally{b.disabled=false;}}
+function novoAluno(){fecharAnexos();app.aluno=null;preencherForm('formAluno',{_id:''});document.getElementById('tituloAluno').textContent='Cadastrar estudante fictício';ir('Cad_Aluno');}
+function editarAlunoAtual(){if(!app.aluno)return;preencherForm('formAluno',app.aluno);document.getElementById('tituloAluno').textContent='Editar dados do estudante';ir('Cad_Aluno');}
+function voltarDoAluno(){ir(app.aluno?'port':'busca');}
+async function excluirAlunoAtual(){if(!app.aluno)return;
+ if(!confirm('Excluir o aluno fictício? Somente será permitido se não houver contatos, registros e anexos vinculados.'))return;
+ const id=app.aluno._id;const r=await executar(()=>pedir('excluirAluno',id));
+ if(r?.sucesso){app.aluno=null;aviso('Aluno fictício excluído.');ir('busca');}}
+
+
+// Anexos vinculados ao aluno E ao registro selecionado; documentos gerais não têm registro_id.
+function abrirAnexos(modulo,registroId){if(!app.aluno)return;
+app.anexo={aluno_id:app.aluno._id,modulo,registro_id:registroId||'',substituir_id:''};
+const g=document.getElementById('gerenciadorAnexos');g.hidden=false;
+document.getElementById('tituloAnexos').textContent='Anexos — '+modulo;
+document.getElementById('arquivoAnexo').value='';atualizarListaAnexos();g.scrollIntoView({behavior:'smooth'});}
+function fecharAnexos(){document.getElementById('gerenciadorAnexos').hidden=true;app.anexo=null;}
+async function atualizarListaAnexos(){if(!app.anexo)return;const ctx={...app.anexo},seq=++anexoSeq;
+const lista=document.getElementById('listaAnexos');lista.innerHTML='Carregando anexos...';
+const r=await executar(()=>pedir('listarAnexos',ctx.aluno_id,ctx.modulo,ctx.registro_id));
+if(seq!==anexoSeq||!app.anexo||ctx.modulo!==app.anexo.modulo||ctx.registro_id!==app.anexo.registro_id)return;
+lista.innerHTML=r?.length?r.map(cardAnexo).join(''):'<div class="empty">Nenhum anexo.</div>';}
+async function enviarAnexo(){if(!app.anexo)return;const inp=document.getElementById('arquivoAnexo'),file=inp.files[0];
+if(!file)return aviso('Selecione um arquivo.',true);
+if(!['application/pdf','image/png','image/jpeg'].includes(file.type))return aviso('Selecione PDF, PNG ou JPG.',true);
+if(file.size>5*1024*1024)return aviso('Máximo de 5 MB por anexo.',true);
+const btn=document.getElementById('botaoEnviarArquivo');btn.disabled=true;
+try{const b64=await new Promise((resolve,reject)=>{const leitor=new FileReader();leitor.onerror=()=>reject(new Error('Falha ao ler arquivo.'));leitor.onload=()=>resolve(String(leitor.result).split(',')[1]);leitor.readAsDataURL(file);});
+const ctx={...app.anexo};const r=await executar(()=>pedir('anexarArquivo',{...ctx,nome:file.name,mime_type:file.type,base64:b64}));
+if(r?.sucesso){app.anexo.substituir_id='';inp.value='';aviso('Arquivo enviado ao Drive com sucesso.');atualizarListaAnexos();if(ctx.modulo==='Documentos')trocarAba('Documentos');}}
+catch(err){aviso(err?.message||String(err),true);}finally{btn.disabled=false;}}
+async function excluirAnexo(id){if(!confirm('Excluir este anexo fictício do Google Drive?'))return;const r=await executar(()=>pedir('excluirAnexo',id));if(r?.sucesso){aviso('Anexo excluído.');if(app.anexo)atualizarListaAnexos();trocarAba(app.modulo);}}
+function substituirAnexo(id){if(!app.anexo || (app.modulo==='Documentos' && app.anexo.modulo!=='Documentos')){if(app.modulo==='Documentos')abrirAnexos('Documentos','');else return aviso('Abra os anexos do registro antes.',true);}
+app.anexo.substituir_id=id;aviso('Selecione o novo arquivo e clique em Enviar arquivo para substituir o anterior.');document.getElementById('arquivoAnexo').focus();}
+
+// Impressão na janela do navegador, sem inventar presença/frequência comprovadas.
+function imprimirHTML(titulo,conteudo){const w=window.open('','_blank');if(!w){aviso('Permita pop-ups para imprimir.',true);return null;}
+w.document.open();w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${e(titulo)}</title><style>body{font:15px Arial,sans-serif;margin:35px;color:#222}h1{font-size:23px}h2{font-size:18px}.mark{color:#a22;border:2px solid #a22;padding:12px;font-weight:bold;margin-bottom:25px}p{line-height:1.6;white-space:pre-wrap}hr{border:0;border-top:1px solid #ddd;margin:20px 0}@media print{.mark{color:#a22}}</style></head><body><div class="mark">PROTÓTIPO ACADÊMICO — DADOS FICTÍCIOS — SEM VALIDADE OFICIAL</div><h1>${e(titulo)}</h1>${conteudo}<hr><p>Documento demonstrativo gerado pelo V.I.D.E.</p></body></html>`);w.document.close();w.focus();return w;}
+async function imprimirOcorrencia(id){const w=window.open('','_blank');if(!w){aviso('Permita pop-ups para imprimir.',true);return;}
+w.document.write('<p>Preparando ocorrência...</p>');const r=await executar(()=>pedir('obterRegistro','Ocorrencias',id));if(!r||!app.aluno||r.aluno_id!==app.aluno._id){w.close();return;}
+const a=app.aluno;const corpo=`<p><b>Estudante:</b> ${e(a.nome)} | <b>EOL:</b> ${e(a.eol)}</p><p><b>Data:</b> ${fd(r.data)}</p><p><b>Registrado por:</b> ${e(r.responsavel_registro)} | <b>RF:</b> ${e(r.rf_registro)}</p><h2>Relato</h2><p>${e(r.relato)}</p><h2>Estratégia</h2><p>${e(r.estrategia)}</p><h2>Encaminhamento</h2><p>${e(r.encaminhamento)}</p>`;
+// Reutiliza a janela já aberta: não sofre bloqueio de pop-ups após chamada assíncrona.
+w.document.open();w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Ocorrência</title><style>body{font:15px Arial;margin:36px}p{line-height:1.6;white-space:pre-wrap}.mark{border:2px solid #a22;color:#a22;padding:12px;font-weight:bold}</style></head><body><p class="mark">PROTÓTIPO ACADÊMICO — DADOS FICTÍCIOS — SEM VALIDADE OFICIAL</p><h1>Registro de ocorrência</h1>${corpo}</body></html>`);w.document.close();w.focus();w.print();}
+function emitirDeclaracao(tipo){if(!app.aluno)return;const a=app.aluno;
+let corpo=`<p><b>Aluno:</b> ${e(a.nome)}</p><p><b>EOL:</b> ${e(a.eol)}</p><p><b>Série/Turma:</b> ${e(a.serie)} / ${e(a.turma)}</p><p><b>Situação cadastrada:</b> ${e(a.situacao)}</p>`;
+if(tipo==='frequencia')corpo+='<p><b>Frequência:</b> não disponível neste protótipo. Deve ser comprovada pela escola com base nos registros oficiais.</p>';
+else corpo+='<p>Modelo de declaração de matrícula para revisão e preenchimento pela instituição. Não comprova matrícula real.</p>';
+const w=imprimirHTML(tipo==='frequencia'?'Modelo de Declaração de Frequência':'Modelo de Declaração de Matrícula',corpo);
+if(w)w.print();}
+
+
+function abrirRelatorio(){
+  if(!app.aluno)return;
+  document.getElementById('nomeAlunoRelatorio').textContent='Estudante: '+app.aluno.nome;
+  document.getElementById('formRelatorio').reset();
+  ir('relatorio');
+}
+async function imprimirRelatorioIndividual(ev){
+  ev.preventDefault();
+  if(!app.aluno)return;
+  const ini=document.getElementById('relInicio').value, fim=document.getElementById('relFim').value;
+  if(ini&&fim&&ini>fim){aviso('A data final não pode ser anterior à inicial.',true);return;}
+  const janela=window.open('','_blank');
+  if(!janela){aviso('Permita abrir janelas para imprimir o relatório.',true);return;}
+  janela.document.write('<p>Preparando relatório demonstrativo...</p>');
+  const alunoId=app.aluno._id;
+  const dados=await executar(()=>pedir('obterRelatorioIndividual',alunoId,ini,fim));
+  if(!dados){janela.close();return;}
+  function item(campo,valor){return `<p><b>${e(campo)}:</b> ${e(valor||'—')}</p>`;}
+  function secao(titulo,registros,descrever){return `<h2>${e(titulo)} (${registros.length})</h2>`+
+    (registros.length?registros.map(r=>`<div class="registro">${descrever(r)}</div>`).join(''):'<p>Nenhum registro encontrado no período.</p>');}
+  const a=dados.aluno;
+  let corpo=`${item('Estudante',a.nome)}${item('EOL',a.eol)}${item('RA',a.ra)}`+
+    `${item('Série / turma',`${a.serie||''} / ${a.turma||''}`)}${item('Situação',a.situacao)}`+
+    `${item('Período consultado', (ini?fd(ini):'Sem limite inicial')+' a '+(fim?fd(fim):'Sem limite final'))}`;
+  corpo+=secao('Contatos',dados.contatos,r=>item('Nome',r.nome)+item('Vínculo',r.parentesco)+item('Telefone',r.telefone));
+  corpo+=secao('Atendimentos',dados.atendimentos,r=>item('Data',fd(r.data))+item('Tipo',r.tipo)+item('Descrição',r.descricao)+item('Encaminhamento',r.encaminhamento));
+  corpo+=secao('Ocorrências',dados.ocorrencias,r=>item('Data',fd(r.data))+item('Relato',r.relato)+item('Providências',r.encaminhamento));
+  corpo+=secao('Afastamentos — informações administrativas',dados.atestados,r=>item('Período',fd(r.data_inicio)+' a '+fd(r.data_fim))+item('Tipo',r.tipo)+item('Abrangência',r.abrangencia));
+  corpo+=secao('Evidências pedagógicas',dados.evidencias,r=>item('Data',fd(r.data))+item('Atividade',r.atividade)+item('Objetivo',r.objetivo)+item('Descrição',r.descricao));
+  const doc=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório individual V.I.D.E.</title><style>
+  body{font:13px/1.5 Arial,sans-serif;margin:34px;color:#223246}h1{color:#17477d;font-size:22px}h2{border-bottom:1px solid #cbd5e1;padding:8px 0;font-size:17px}
+  .marca{border:2px solid #b52235;color:#a12131;padding:12px;font-weight:700;margin-bottom:18px}
+  .registro{border-left:3px solid #a2b9ce;padding:4px 12px;margin:8px 0 14px;break-inside:avoid}p{white-space:pre-wrap;overflow-wrap:anywhere;margin:5px 0}
+  </style></head><body><div class="marca">PROTÓTIPO ACADÊMICO — DADOS FICTÍCIOS — SEM VALIDADE OFICIAL</div>
+  <h1>Relatório individual do estudante</h1>${corpo}<hr><p>Não inclui dados médicos detalhados nem Educação Especial. Modelo demonstrativo gerado pelo V.I.D.E.</p></body></html>`;
+  janela.document.open();janela.document.write(doc);janela.document.close();janela.focus();janela.print();
+}
+
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-acao]');if(!b)return;const id=b.dataset.id,m=b.dataset.modulo;
+switch(b.dataset.acao){case'abrir-aluno':abrirAluno(id);break;case'editar-registro':editarRegistro(id);break;case'excluir-registro':excluirRegistroDaTela(id);break;case'anexos':abrirAnexos(m,id);break;case'imprimir':imprimirOcorrencia(id);break;
+case'excluir-anexo':excluirAnexo(id);break;case'substituir-anexo':substituirAnexo(id);break;case'declaracao':emitirDeclaracao(b.dataset.tipo);break;}});
+document.getElementById('formRelatorio').addEventListener('submit',imprimirRelatorioIndividual);
+document.getElementById('formBusca').addEventListener('submit',ev=>{ev.preventDefault();buscar();});
+document.getElementById('formBusca').addEventListener('reset',()=>setTimeout(buscar,0));
+Object.entries(FORMULARIOS).forEach(([m,id])=>document.getElementById(id).addEventListener('submit',ev=>salvarModulo(ev,m)));
+buscar();
+</script>
+
+</body></html>
