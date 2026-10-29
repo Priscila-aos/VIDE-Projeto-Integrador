@@ -57,10 +57,24 @@
       <div class="col6"><label for="termo">Nome do aluno, EOL ou RA</label><input id="termo" placeholder="Nome ou identificação"></div>
       <div class="col3"><label for="serieFiltro">Ano / série</label><input id="serieFiltro" placeholder="Ex.: 1º Ano"></div>
       <div class="col3"><label for="periodoFiltro">Período</label><select id="periodoFiltro"><option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
-      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button><button class="secondary" type="button" onclick="abrirImportacaoCSV()">Importar alunos (CSV)</button></div>
+      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button><button class="secondary" type="button" onclick="abrirImportacaoV2()">Importar planilha (Excel / CSV)</button></div>
     </form>
   </div>
-  <div class="panel" id="painelImportacaoCSV" hidden>
+  <div class="panel" id="painelImportacaoPlanilha" hidden>
+  <h2>Importar planilha — dados fictícios</h2>
+  <p class="muted">Arquivo Excel (.xlsx) com múltiplas guias, ou CSV de uma única guia. Abas suportadas: Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrencias, Evidencias e EducacaoEspecial.</p>
+  <p class="help">Somente dados fictícios. IDs novos gerados automaticamente. Registros existentes preservados. Não importa Anexos, Notas ou Usuarios, nem arquivos e senhas. EOL ou aluno_id é obrigatório para relacionamentos. Limites: 2,5 MB e 3.000 linhas por guia.</p>
+  <div class="stack">
+    <input id="arquivoPlanilhaV2" type="file" accept=".xlsx,.csv" style="max-width:480px" onchange="limparImportacaoV2()">
+    <label for="abaCSVV2" style="margin:0">Aba do CSV</label>
+    <select id="abaCSVV2" onchange="limparImportacaoV2()" style="width:210px"><option>Alunos</option><option>Contatos</option><option>Atestados</option><option value="Atendimentos">Registros / Atendimentos</option><option>Ocorrencias</option><option>Evidencias</option><option>EducacaoEspecial</option></select>
+    <button class="secondary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
+    <button class="secondary" type="button" onclick="fecharImportacaoV2()">Fechar</button>
+  </div>
+  <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
+  <div class="actions"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
+</div>
+<div class="panel" id="painelImportacaoCSV" hidden>
     <h2>Importação em lote — somente alunos fictícios</h2>
     <p class="muted">Selecione um CSV UTF-8 exportado do Google Planilhas ou Excel. Obrigatórias: <strong>Nome</strong> e <strong>EOL</strong>. Outras colunas compatíveis serão aproveitadas. Não inclua dados reais de estudantes.</p>
     <p class="help">Limites: 1 MB e 2.000 linhas. IDs do arquivo serão ignorados e substituídos por IDs únicos do V.I.D.E. EOLs já cadastrados serão ignorados, sem alterar registros existentes.</p>
@@ -246,6 +260,69 @@
 'use strict';
 // V.I.D.E. — telas integradas. Dados de demonstração, não utilizar dados reais.
 const app={aluno:null,modulo:'Contatos',tela:'busca',anexo:null};
+
+let entradaPlanilhaV2=null;
+function abrirImportacaoV2(){document.getElementById('painelImportacaoPlanilha').hidden=false;limparImportacaoV2();}
+function fecharImportacaoV2(){
+ document.getElementById('painelImportacaoPlanilha').hidden=true;
+ document.getElementById('arquivoPlanilhaV2').value='';
+ limparImportacaoV2();
+}
+function limparImportacaoV2(){
+ entradaPlanilhaV2=null;
+ document.getElementById('btnImportarV2').hidden=true;
+ const info=document.getElementById('resultadoV2');info.hidden=true;info.textContent='';
+}
+function converterBase64V2(arquivo){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onerror=()=>reject(new Error('Não foi possível ler o arquivo.'));
+  reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');
+  reader.readAsDataURL(arquivo);
+ });
+}
+function resumoImportacaoV2(d){
+ const linhas=Object.entries(d.contagem||{}).filter(([nome,v])=>v.origem).map(([nome,v])=>
+ nome+': '+v.novos+' novos / '+v.ignorados+' ignorados (total '+v.origem+')');
+ if(d.ignorado&&d.ignorado.length)linhas.push('Abas fora do escopo: '+d.ignorado.join(', '));
+ linhas.push('Total de registros novos: '+d.totalNovo);
+ return linhas.join('\n');
+}
+async function analisarImportacaoV2Tela(){
+ limparImportacaoV2();
+ const arquivo=document.getElementById('arquivoPlanilhaV2').files[0];
+ if(!arquivo){aviso('Selecione uma planilha Excel (.xlsx) ou CSV.',true);return;}
+ if(!/\.(xlsx|csv)$/i.test(arquivo.name)){aviso('Formato aceito: .xlsx ou .csv.',true);return;}
+ if(arquivo.size>2500000){aviso('Arquivo maior que 2,5 MB.',true);return;}
+ const botao=document.getElementById('btnAnaliseV2');botao.disabled=true;
+ try{
+  const base64=await converterBase64V2(arquivo);
+  const entrada={nome:arquivo.name,base64:base64,moduloCsv:document.getElementById('abaCSVV2').value};
+  const analise=await pedir('analisarImportacaoV2',entrada);
+  entradaPlanilhaV2=entrada;
+  const info=document.getElementById('resultadoV2');
+  info.textContent=resumoImportacaoV2(analise);info.hidden=false;
+  document.getElementById('btnImportarV2').hidden=!analise.totalNovo;
+  aviso('');
+ }catch(e){limparImportacaoV2();aviso(e.message||String(e),true);}
+ finally{botao.disabled=false;}
+}
+async function confirmarImportacaoV2(){
+ if(!entradaPlanilhaV2)return;
+ if(!confirm('Importar somente registros fictícios? Os registros existentes serão preservados.'))return;
+ const botao=document.getElementById('btnImportarV2');botao.disabled=true;
+ try{
+  const result=await pedir('importarPlanilhaV2',entradaPlanilhaV2);
+  const info=document.getElementById('resultadoV2');
+  info.textContent='Importação concluída.\n'+resumoImportacaoV2(result);info.hidden=false;
+  entradaPlanilhaV2=null;botao.hidden=true;
+  document.getElementById('arquivoPlanilhaV2').value='';
+  aviso('Importação concluída. '+result.totalNovo+' registros adicionados.');
+  buscar();
+ }catch(e){aviso(e.message||String(e),true);}
+ finally{botao.disabled=false;}
+}
+
 let conteudoCSVAnalisado = null;
 function abrirImportacaoCSV(){
   document.getElementById('painelImportacaoCSV').hidden=false;
