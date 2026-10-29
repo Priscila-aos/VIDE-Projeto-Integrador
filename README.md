@@ -64,14 +64,3 @@ A pasta de anexos no Drive é criada e vinculada à planilha quando o mecanismo 
 A planilha usada nos testes tem link próprio, mas **o acesso geral estava restrito na última verificação**. O endereço não é uma autorização de acesso nem um aplicativo público:
 
 [Planilha V.I.D.E. — Projeto Integrado](https://docs.google.com/spreadsheets/d/1dd6w0zA1OEzZtK6L5UeVDKzPwPUZlXkCZrJefhpNfQQ/edit?gid=188152873#gid=188152873)
-
-## Limitações e proteção de dados
-
-- Sem controle institucional de acesso por função ou por módulo; o menu do Sheets não substitui essa proteção.
-- Sem auditoria integral e imutável de alterações por usuário.
-- Permissões dos arquivos do Drive devem ser verificadas separadamente das da planilha.
-- CID, laudos e registros da Educação Especial **não** são incluídos no relatório individual demonstrativo.
-- Declarações são modelos acadêmicos, sem validação institucional; o sistema não calcula frequência escolar.
-- Não houve homologação da escola, auditoria completa de WCAG 2.2 nem testes formais de segurança e carga.
-
-Consulte [Segurança e limitações](docs/SEGURANCA.md), [Testes](docs/TESTES.md) e [Origem e critérios](docs/ORIGEM.md).
