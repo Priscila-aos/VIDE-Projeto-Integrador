@@ -159,6 +159,10 @@ function vide2PreparaTabela_(guia) {
   const cab=guia.linhas[0].map(vide2Norm_);
   const map={};
   cab.forEach((c,i)=>{
+    // Na planilha AranhaMello, "Origem" = origem da matrícula (ex.: INICIAL),
+    // e não "Escola de origem". Para evitar dados incorretos, só importar
+    // esse campo quando o cabeçalho for explicitamente "escola_origem".
+    if(guia.modulo==='Alunos' && c==='origem')return;
     let campo=(VIDE2_COLUNAS[guia.modulo]||{})[c]||c;
     // Nunca reusar o UUID da fonte para identificar os novos registros.
     if(c==='id'||c==='_id')campo='_id';
