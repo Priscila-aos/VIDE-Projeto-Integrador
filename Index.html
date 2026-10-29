@@ -57,8 +57,20 @@
       <div class="col6"><label for="termo">Nome do aluno, EOL ou RA</label><input id="termo" placeholder="Nome ou identificação"></div>
       <div class="col3"><label for="serieFiltro">Ano / série</label><input id="serieFiltro" placeholder="Ex.: 1º Ano"></div>
       <div class="col3"><label for="periodoFiltro">Período</label><select id="periodoFiltro"><option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
-      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button></div>
+      <div class="col12 actions"><button type="reset" class="secondary">Limpar filtros</button><button class="primary" type="submit">Buscar</button><button class="success" type="button" onclick="novoAluno()">+ Cadastrar aluno fictício</button><button class="secondary" type="button" onclick="abrirImportacaoCSV()">Importar alunos (CSV)</button></div>
     </form>
+  </div>
+  <div class="panel" id="painelImportacaoCSV" hidden>
+    <h2>Importação em lote — somente alunos fictícios</h2>
+    <p class="muted">Selecione um CSV UTF-8 exportado do Google Planilhas ou Excel. Obrigatórias: <strong>Nome</strong> e <strong>EOL</strong>. Outras colunas compatíveis serão aproveitadas. Não inclua dados reais de estudantes.</p>
+    <p class="help">Limites: 1 MB e 2.000 linhas. IDs do arquivo serão ignorados e substituídos por IDs únicos do V.I.D.E. EOLs já cadastrados serão ignorados, sem alterar registros existentes.</p>
+    <div class="stack">
+      <input id="arquivoImportacaoCSV" type="file" accept=".csv,text/csv" style="max-width:520px" onchange="limparAnaliseCSV()">
+      <button type="button" class="secondary" id="botaoAnalisarCSV" onclick="analisarCSV()">Analisar arquivo</button>
+      <button type="button" class="secondary" onclick="fecharImportacaoCSV()">Fechar</button>
+    </div>
+    <div id="resultadoImportacaoCSV" class="aviso" style="margin-top:14px" role="status" aria-live="polite" hidden></div>
+    <div class="actions"><button id="botaoConfirmarCSV" type="button" class="primary" onclick="confirmarCSV()" hidden>Confirmar importação</button></div>
   </div>
   <div class="panel"><h2>Resultados <span class="pill" id="contagem">0 encontrados</span></h2><div class="table-scroll"><table><thead><tr><th>EOL / RA</th><th>Nome</th><th>Série</th><th>Turma</th><th>Período</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="resultadoAlunos"></tbody></table></div></div>
 </section>
@@ -234,6 +246,62 @@
 'use strict';
 // V.I.D.E. — telas integradas. Dados de demonstração, não utilizar dados reais.
 const app={aluno:null,modulo:'Contatos',tela:'busca',anexo:null};
+let conteudoCSVAnalisado = null;
+function abrirImportacaoCSV(){
+  document.getElementById('painelImportacaoCSV').hidden=false;
+  limparAnaliseCSV();
+}
+function fecharImportacaoCSV(){
+  document.getElementById('painelImportacaoCSV').hidden=true;
+  document.getElementById('arquivoImportacaoCSV').value='';
+  limparAnaliseCSV();
+}
+function limparAnaliseCSV(){
+  conteudoCSVAnalisado=null;
+  document.getElementById('botaoConfirmarCSV').hidden=true;
+  const resultado=document.getElementById('resultadoImportacaoCSV');
+  resultado.hidden=true;resultado.textContent='';
+}
+async function analisarCSV(){
+  limparAnaliseCSV();
+  const arquivo=document.getElementById('arquivoImportacaoCSV').files[0];
+  if(!arquivo){aviso('Selecione um arquivo CSV para analisar.',true);return;}
+  if(!/\.csv$/i.test(arquivo.name)){aviso('O arquivo deve ser CSV (.csv).',true);return;}
+  if(arquivo.size>1000000){aviso('Arquivo muito grande. Limite: 1 MB.',true);return;}
+  const botao=document.getElementById('botaoAnalisarCSV');
+  botao.disabled=true;
+  try{
+    const conteudo=await arquivo.text();
+    const analise=await pedir('analisarImportacaoAlunosCSV',conteudo);
+    conteudoCSVAnalisado=conteudo;
+    const info=document.getElementById('resultadoImportacaoCSV');
+    info.textContent='Linhas analisadas: '+analise.total+' | Novos alunos: '+analise.novos+
+      ' | EOLs existentes (não serão alterados): '+analise.jaExistentes+
+      '. Campos reconhecidos: '+analise.campos.join(', ')+'.'+
+      (analise.ignorados.length?' Colunas ignoradas: '+analise.ignorados.join(', ')+'.':'');
+    info.hidden=false;
+    document.getElementById('botaoConfirmarCSV').hidden=analise.novos===0;
+    aviso('');
+  }catch(erro){limparAnaliseCSV();aviso(erro.message||String(erro),true);}
+  finally{botao.disabled=false;}
+}
+async function confirmarCSV(){
+  if(!conteudoCSVAnalisado)return;
+  if(!confirm('Confirmar a importação dos NOVOS estudantes fictícios? Os registros existentes serão preservados.'))return;
+  const botao=document.getElementById('botaoConfirmarCSV');
+  botao.disabled=true;
+  try{
+    const resposta=await pedir('importarAlunosCSV',conteudoCSVAnalisado);
+    document.getElementById('resultadoImportacaoCSV').textContent='Importação concluída: '+
+      resposta.importados+' alunos adicionados; '+resposta.ignorados+' EOLs existentes ignorados.';
+    botao.hidden=true;conteudoCSVAnalisado=null;
+    document.getElementById('arquivoImportacaoCSV').value='';
+    aviso('Importação concluída. '+resposta.importados+' estudantes fictícios adicionados.');
+    buscar();
+  }catch(erro){aviso(erro.message||String(erro),true);}
+  finally{botao.disabled=false;}
+}
+
 const FORMULARIOS={Alunos:'formAluno',Contatos:'formContato',Atestados:'formAtestado',Atendimentos:'formAtendimento',Ocorrencias:'formOcorrencia',Evidencias:'formEvidencia',EducacaoEspecial:'formEducacaoEspecial'};
 const PAGINAS={Alunos:'Cad_Aluno',Contatos:'Cad_Contato',Atestados:'Cad_Atestado',Atendimentos:'Cad_Atendimento',Ocorrencias:'Cad_Ocorrencia',Evidencias:'Cad_Evidencia',EducacaoEspecial:'Cad_EducacaoEspecial'};
 const ROTULOS={Contatos:'contato',Atestados:'atestado',Atendimentos:'atendimento',Ocorrencias:'ocorrência',Documentos:'documento',Evidencias:'evidência pedagógica',EducacaoEspecial:'orientação pedagógica'};
