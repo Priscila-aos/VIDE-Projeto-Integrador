@@ -78,4 +78,6 @@ Consulte [Segurança e limitações](docs/SEGURANCA.md), [Testes](docs/TESTES.md
 
 ## Autoria e publicação
 
-O V.I.D.E. é um projeto acadêmico coletivo. A inclusão do código neste pacote **não significa que ele já tenha sido publicado no GitHub**. Antes de tornar o repositório público, combinar autoria, licença e divulgação com o grupo e a instituição. Para desenvolvimento, prefira inicialmente um repositório privado.
+O V.I.D.E. é um **projeto acadêmico coletivo**, e este repositório é público para fins de apresentação técnica e reprodução do protótipo com dados fictícios. A publicação do código não significa que o sistema esteja autorizado para uso com dados reais ou homologado por uma instituição de ensino.
+
+Os nomes dos integrantes, as contribuições individuais e as condições de licenciamento e divulgação devem ser confirmados com o grupo antes de serem declarados aqui. **Nenhuma licença de reutilização foi definida neste repositório.**
