@@ -42,13 +42,29 @@
   .filebox{border:1px dashed #9caec5;padding:14px;border-radius:9px;margin:12px 0;background:#f8fbff}
   .filebox input{max-width:550px}.record p{overflow-wrap:anywhere}
   .special{background:#fff8e6;border:1px solid #efd99c;border-radius:8px;padding:12px;margin:12px 0}
-  /* Destaque educativo: IDs gerados automaticamente, separado do alerta de segurança. */
-  .import-id-banner{background:#f1f3f5;border:2px solid #94a3b8;border-left:8px solid #64748b;border-radius:10px;padding:14px 17px;margin:12px 0 14px;color:#334155}
-  .import-id-title{font-size:17px;font-weight:800;color:#334155;display:block;margin-bottom:6px}
-  .import-id-banner p{margin:0 0 7px}.import-id-banner p:last-child{margin-bottom:0}
-  .import-id-banner code{background:#e2e8f0;border-radius:4px;padding:2px 5px;color:#334155;font-weight:750}
-  .import-security-banner{background:#fff6e0;border:2px solid #b87b10;border-left:8px solid #b87b10;border-radius:10px;padding:12px 16px;margin:12px 0 14px;color:#5e410b}
-  .import-security-banner strong{color:#5e410b}
+  /* Área de importação: avisos objetivos e ajuda opcional. */
+  #painelImportacaoPlanilha{padding:17px 20px}
+  #painelImportacaoPlanilha h2{margin:0 0 12px;font-size:18px}
+  .import-id-banner{background:#f1f3f5;border:1px solid #cbd5e1;border-left:5px solid #64748b;border-radius:8px;padding:10px 13px;margin:0 0 9px;color:#334155}
+  .import-id-title{font-size:14px;font-weight:800;color:#334155;display:block;margin-bottom:3px}
+  .import-id-banner p{font-size:13px;line-height:1.5;margin:0}
+  .import-id-banner code,.import-details code{background:#e2e8f0;border-radius:4px;padding:1px 5px;color:#334155;font-weight:750}
+  .import-security-banner{background:#fff8e8;border:1px solid #ecd59c;border-left:5px solid #b87b10;border-radius:8px;padding:10px 13px;margin:0 0 13px;color:#63420e;font-size:12.5px;line-height:1.45}
+  .import-security-banner strong{color:#714507}
+  .import-controls{display:flex;align-items:end;gap:10px;flex-wrap:wrap}
+  .import-file{flex:1 1 300px;min-width:235px}
+  .import-file label,.import-csv label{font-size:12px;margin:0 0 5px}
+  .import-file input{min-height:41px;padding:7px 9px;font-size:12px}
+  .import-file input::file-selector-button{background:#eef3f9;border:1px solid #bac9d9;border-radius:5px;padding:5px 9px;color:#243f5b;font:inherit;font-weight:650;margin-right:10px;cursor:pointer}
+  .import-csv{flex:0 0 180px}
+  .import-csv select{height:41px}
+  .import-controls>button{min-height:41px}
+  .import-footnote{font-size:12px;color:#526174;margin:8px 0 0}
+  .import-details{border-top:1px solid #e1e7ef;margin-top:12px;padding-top:9px;font-size:12px;color:#526174}
+  .import-details summary{color:#17477d;font-weight:650;font-size:12.5px;cursor:pointer}
+  .import-details[open] summary{margin-bottom:8px}
+  .import-details p{margin:6px 0;line-height:1.55}
+  @media(max-width:650px){#painelImportacaoPlanilha{padding:14px}.import-controls{gap:9px}.import-file{flex-basis:100%}.import-csv{flex:1 1 160px}}
   .filelinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filelinks a{border:1px solid #9cbce0;border-radius:7px;color:#17477d;background:#edf5ff;text-decoration:none;font-weight:600}.filelinks a:hover{background:#e1edfa}
 </style>
 
@@ -68,24 +84,35 @@
     </form>
   </div>
   <div class="panel" id="painelImportacaoPlanilha" hidden>
-  <h2>Importar planilha — dados fictícios</h2>
-  <div class="import-id-banner" role="note" aria-label="Importante: identificação automática dos alunos">
-    <strong class="import-id-title">IMPORTANTE: O V.I.D.E. GERA O ID AUTOMATICAMENTE</strong>
-    <p>Na aba <strong>Alunos</strong>, a coluna <code>_id</code> <strong>pode ficar vazia</strong>. Basta preencher <strong>Nome</strong> e <strong>EOL</strong>: ao confirmar a importação, o sistema cria um identificador único para cada novo aluno.</p>
-    <p>Para importar dados de outras abas, cada registro deve indicar o aluno pelo <strong>EOL</strong> ou pelo <code>aluno_id</code> correspondente ao <code>_id</code> da planilha de origem. Quando usar <code>aluno_id</code>, os IDs dos alunos devem estar preenchidos na origem para permitir o vínculo. O V.I.D.E. gera IDs próprios para os novos registros.</p>
+  <h2>Importar planilha</h2>
+  <div class="import-id-banner" role="note" aria-label="Identificador gerado automaticamente">
+    <strong class="import-id-title">ID gerado automaticamente</strong>
+    <p>Na aba <strong>Alunos</strong>, preencha <strong>Nome</strong> e <strong>EOL</strong>. O campo <code>_id</code> <strong>pode ficar vazio</strong>: o V.I.D.E. gera um ID único para cada novo aluno.</p>
   </div>
-  <div class="import-security-banner" role="note" aria-label="Atenção: uso acadêmico, somente dados fictícios">
-    <strong>ATENÇÃO — SOMENTE DADOS FICTÍCIOS.</strong> O V.I.D.E. é um protótipo acadêmico. A importação não significa que esteja pronto para dados reais de estudantes. Uma implantação exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua.
+  <div class="import-security-banner" role="note" aria-label="Atenção: somente dados fictícios">
+    <strong>ATENÇÃO — SOMENTE DADOS FICTÍCIOS.</strong> Este é um protótipo acadêmico, não preparado para operar com dados reais de estudantes.
   </div>
-  <p class="muted">Arquivo Excel (.xlsx) com múltiplas guias ou CSV de uma única guia. Abas suportadas: Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrencias, Evidencias e EducacaoEspecial.</p>
-  <p class="help">Clique em <strong>Analisar</strong> para revisar o resumo. Nenhum dado é gravado antes de <strong>Confirmar importação</strong>. Registros existentes são preservados. Não importa Anexos, Notas ou Usuarios, nem arquivos e senhas. Limites: 2,5 MB e 3.000 linhas por guia.</p>
-  <div class="stack">
-    <input id="arquivoPlanilhaV2" type="file" accept=".xlsx,.csv" style="max-width:480px" onchange="limparImportacaoV2()">
-    <label for="abaCSVV2" style="margin:0">Aba do CSV</label>
-    <select id="abaCSVV2" onchange="limparImportacaoV2()" style="width:210px"><option>Alunos</option><option>Contatos</option><option>Atestados</option><option value="Atendimentos">Registros / Atendimentos</option><option>Ocorrencias</option><option>Evidencias</option><option>EducacaoEspecial</option></select>
-    <button class="secondary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
+  <div class="import-controls">
+    <div class="import-file">
+      <label for="arquivoPlanilhaV2">Arquivo Excel (.xlsx) ou CSV (.csv)</label>
+      <input id="arquivoPlanilhaV2" type="file" accept=".xlsx,.csv" onchange="atualizarArquivoImportacaoV2()">
+    </div>
+    <div class="import-csv" id="campoAbaCSVV2" hidden>
+      <label for="abaCSVV2">Aba correspondente ao CSV</label>
+      <select id="abaCSVV2" onchange="limparImportacaoV2()"><option>Alunos</option><option>Contatos</option><option>Atestados</option><option value="Atendimentos">Registros / Atendimentos</option><option>Ocorrencias</option><option>Evidencias</option><option>EducacaoEspecial</option></select>
+    </div>
+    <button class="primary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
     <button class="secondary" type="button" onclick="fecharImportacaoV2()">Fechar</button>
   </div>
+  <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite: 2,5 MB • Analisar não grava dados.</p>
+  <details class="import-details">
+    <summary>Como preparar a planilha, vincular registros e entender os limites</summary>
+    <p><strong>Identificadores:</strong> para cadastrar alunos, Nome e EOL são obrigatórios. O <code>_id</code> pode ficar vazio, pois será gerado automaticamente. EOLs já cadastrados são ignorados, sem alterar registros existentes.</p>
+    <p><strong>Registros de outras abas:</strong> indique o aluno por seu EOL ou por <code>aluno_id</code> correspondente ao <code>_id</code> da aba Alunos do arquivo de origem. Para usar <code>aluno_id</code>, os IDs dos alunos na origem precisam estar preenchidos. Novos registros recebem IDs próprios.</p>
+    <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. Não inclui Anexos, Notas, Usuários, arquivos ou senhas. Máximo de 3.000 linhas por aba.</p>
+    <p><strong>Confirmação:</strong> somente o botão Confirmar importação grava os dados, após a análise.</p>
+    <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
+  </details>
   <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
   <div class="actions"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
 </div>
@@ -277,10 +304,18 @@
 const app={aluno:null,modulo:'Contatos',tela:'busca',anexo:null};
 
 let entradaPlanilhaV2=null;
-function abrirImportacaoV2(){document.getElementById('painelImportacaoPlanilha').hidden=false;limparImportacaoV2();}
+function abrirImportacaoV2(){
+ document.getElementById('painelImportacaoPlanilha').hidden=false;
+ atualizarArquivoImportacaoV2();
+}
 function fecharImportacaoV2(){
  document.getElementById('painelImportacaoPlanilha').hidden=true;
  document.getElementById('arquivoPlanilhaV2').value='';
+ atualizarArquivoImportacaoV2();
+}
+function atualizarArquivoImportacaoV2(){
+ const arquivo=document.getElementById('arquivoPlanilhaV2').files[0];
+ document.getElementById('campoAbaCSVV2').hidden=!arquivo||!/\.csv$/i.test(arquivo.name);
  limparImportacaoV2();
 }
 function limparImportacaoV2(){
