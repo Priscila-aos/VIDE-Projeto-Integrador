@@ -71,6 +71,7 @@
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
+  #btnImportarV2.import-empty-button:disabled{opacity:1;cursor:default;background:#eef1f4;color:#566575;border:1px solid #ced7e1}
   .import-confirmation{background:#edf6ff;border:1px solid #bcd8ef;border-left:5px solid #17477d;border-radius:9px;padding:15px 17px;margin-top:14px;color:#183f63}
   .import-confirmation strong{display:block;font-size:17px;margin-bottom:5px;color:#123c67}
   .import-confirmation p{font-size:14px;margin:0 0 8px;line-height:1.5}
@@ -364,7 +365,11 @@ function atualizarArquivoImportacaoV2(){
 }
 function limparImportacaoV2(){
  entradaPlanilhaV2=null;
- document.getElementById('btnImportarV2').hidden=true;
+ const botaoConfirmar=document.getElementById('btnImportarV2');
+ botaoConfirmar.hidden=true;
+ botaoConfirmar.disabled=false;
+ botaoConfirmar.textContent='Confirmar importação';
+ botaoConfirmar.className='primary';
  const info=document.getElementById('resultadoV2');
  info.hidden=true;
  info.className='aviso';
@@ -411,8 +416,20 @@ async function analisarImportacaoV2Tela(){
   const entrada={nome:arquivo.name,base64:base64,moduloCsv:document.getElementById('abaCSVV2').value};
   const analise=await pedir('analisarImportacaoV2',entrada);
   entradaPlanilhaV2=entrada;
-  mostrarResultadoImportacaoV2('Verificação concluída.\n'+resumoImportacaoV2(analise));
-  document.getElementById('btnImportarV2').hidden=!analise.totalNovo;
+  const quantidadeNova=Number(analise.totalNovo)||0;
+  const botaoConfirmar=document.getElementById('btnImportarV2');
+  botaoConfirmar.hidden=false;
+  if(quantidadeNova===0){
+   mostrarResultadoImportacaoV2('Verificação concluída — nenhum registro novo.\nOs registros do arquivo já existem ou não há registros para adicionar. Nenhuma alteração foi realizada.\n'+resumoImportacaoV2(analise));
+   botaoConfirmar.disabled=true;
+   botaoConfirmar.className='secondary import-empty-button';
+   botaoConfirmar.textContent='Nenhum registro para importar';
+  }else{
+   mostrarResultadoImportacaoV2('Verificação concluída.\n'+resumoImportacaoV2(analise));
+   botaoConfirmar.disabled=false;
+   botaoConfirmar.className='primary';
+   botaoConfirmar.textContent='Confirmar importação';
+  }
   aviso('');
  }catch(e){
   limparImportacaoV2();
