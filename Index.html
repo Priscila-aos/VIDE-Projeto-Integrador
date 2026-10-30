@@ -71,6 +71,11 @@
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
+  .import-confirmation{background:#edf6ff;border:1px solid #bcd8ef;border-left:5px solid #17477d;border-radius:9px;padding:15px 17px;margin-top:14px;color:#183f63}
+  .import-confirmation strong{display:block;font-size:17px;margin-bottom:5px;color:#123c67}
+  .import-confirmation p{font-size:14px;margin:0 0 8px;line-height:1.5}
+  .import-confirmation pre{font-family:inherit;font-size:13px;line-height:1.6;white-space:pre-wrap;margin:0;color:#3f566f}
+
   .import-details{background:#edf4fc;border:1px solid #c6dbf2;border-radius:9px;margin-top:14px;padding:14px 15px;font-size:13.5px;color:#3f4c59}
   .import-details summary{color:#183b61;font-weight:800;font-size:15.5px;line-height:1.45;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
   .import-details summary::-webkit-details-marker{display:none}
@@ -149,6 +154,11 @@
   </details>
   <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
   <div class="actions"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
+  <div id="confirmacaoImportacaoV2" class="import-confirmation" role="status" aria-live="polite" hidden>
+    <strong>✓ Importação concluída!</strong>
+    <p id="mensagemConfirmacaoV2"></p>
+    <pre id="detalhesConfirmacaoV2"></pre>
+  </div>
 </div>
 <div class="panel" id="painelImportacaoCSV" hidden>
     <h2>Importação em lote — somente alunos fictícios</h2>
@@ -359,6 +369,10 @@ function limparImportacaoV2(){
  info.hidden=true;
  info.className='aviso';
  info.textContent='';
+ const conclusao=document.getElementById('confirmacaoImportacaoV2');
+ conclusao.hidden=true;
+ document.getElementById('mensagemConfirmacaoV2').textContent='';
+ document.getElementById('detalhesConfirmacaoV2').textContent='';
 }
 function mostrarResultadoImportacaoV2(mensagem, erro=false){
  const info=document.getElementById('resultadoV2');
@@ -411,17 +425,34 @@ async function analisarImportacaoV2Tela(){
 async function confirmarImportacaoV2(){
  if(!entradaPlanilhaV2)return;
  if(!confirm('Importar somente registros fictícios? Os registros existentes serão preservados.'))return;
- const botao=document.getElementById('btnImportarV2');botao.disabled=true;
+ const botao=document.getElementById('btnImportarV2');
+ botao.disabled=true;
+ botao.textContent='Importando...';
+ mostrarResultadoImportacaoV2('Importação em andamento. Aguarde a confirmação...');
  try{
   const result=await pedir('importarPlanilhaV2',entradaPlanilhaV2);
-  const info=document.getElementById('resultadoV2');
-  info.textContent='Importação concluída.\n'+resumoImportacaoV2(result);info.hidden=false;
-  entradaPlanilhaV2=null;botao.hidden=true;
+  const total=Number(result.totalNovo)||0;
+  entradaPlanilhaV2=null;
+  botao.hidden=true;
   document.getElementById('arquivoPlanilhaV2').value='';
-  aviso('Importação concluída. '+result.totalNovo+' registros adicionados.');
+  document.getElementById('campoAbaCSVV2').hidden=true;
+  const info=document.getElementById('resultadoV2');
+  info.hidden=true;
+  info.textContent='';
+  const conclusao=document.getElementById('confirmacaoImportacaoV2');
+  document.getElementById('mensagemConfirmacaoV2').textContent=
+    (total===1?'Foi adicionado 1 registro.':'Foram adicionados '+total+' registros.')+
+    ' Os registros já cadastrados foram preservados.';
+  document.getElementById('detalhesConfirmacaoV2').textContent=resumoImportacaoV2(result);
+  conclusao.hidden=false;
+  conclusao.scrollIntoView({behavior:'smooth',block:'nearest'});
   buscar();
- }catch(e){aviso(e.message||String(e),true);}
- finally{botao.disabled=false;}
+ }catch(e){
+  mostrarResultadoImportacaoV2('Não foi possível concluir a importação: '+(e?.message||String(e)),true);
+ }finally{
+  botao.disabled=false;
+  botao.textContent='Confirmar importação';
+ }
 }
 
 let conteudoCSVAnalisado = null;
