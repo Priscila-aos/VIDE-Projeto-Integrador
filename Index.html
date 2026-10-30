@@ -78,6 +78,43 @@
   .import-confirmation p{font-size:14px;margin:0 0 8px;line-height:1.5}
   .import-confirmation pre{font-family:inherit;font-size:13px;line-height:1.6;white-space:pre-wrap;margin:0;color:#3f566f}
 
+  /* Área inicial informativa, mais compacta quando um arquivo é selecionado. */
+  .import-id-short{display:none}
+  #painelImportacaoPlanilha.import-file-selected .import-id-full{display:none}
+  #painelImportacaoPlanilha.import-file-selected .import-id-short{display:block}
+  #painelImportacaoPlanilha.import-file-selected .import-id-banner{padding:9px 12px;gap:10px}
+  #painelImportacaoPlanilha.import-file-selected .import-id-icon{width:30px;height:30px;font-size:17px}
+  #painelImportacaoPlanilha.import-file-selected .import-id-title{font-size:14px;margin-bottom:2px}
+  .import-flow summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .import-flow summary::-webkit-details-marker{display:none}
+  .import-flow summary::after{content:"";width:8px;height:8px;border-right:2px solid #52749a;border-bottom:2px solid #52749a;transform:rotate(45deg);margin-left:auto;margin-right:5px;transition:transform .15s}
+  .import-flow[open] summary::after{transform:rotate(225deg)}
+  .import-flow summary:focus-visible{outline:3px solid #8aa3bf;outline-offset:4px}
+  .import-flow-hint{font-size:12px;font-weight:400;color:#5c6e84}
+  .import-flow:not([open]){padding:11px 14px;margin:8px 0 13px}
+  .import-flow:not([open]) summary{margin:0}
+  .import-flow[open] summary{margin-bottom:10px}
+  /* Resumo de verificação e botão de ação agrupados. */
+  .import-result-panel{background:#f7f9fb;border:1px solid #d5e0eb;border-radius:9px;padding:15px 17px;margin-top:14px;color:#25394f}
+  .import-result-panel[hidden],.import-result-actions[hidden],.import-confirmation[hidden]{display:none}
+  .import-result-panel.import-result-error{background:#fff4f4;border-color:#e9bcc3;color:#953047}
+  .import-result-heading{display:block;font-size:17px;font-weight:800;margin:0 0 6px;color:#213d5a}
+  .import-result-copy{font-size:13.5px;line-height:1.55;margin:0 0 10px}
+  .import-counts{display:flex;gap:10px;flex-wrap:wrap;margin:11px 0 12px}
+  .import-count{background:#fff;border:1px solid #dce4ec;border-radius:7px;padding:9px 13px;min-width:125px}
+  .import-count strong{display:block;font-size:23px;line-height:1.2;font-weight:800;color:#17477d}
+  .import-count span{display:block;font-size:12px;color:#54677b;margin-top:3px}
+  .import-summary-table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .import-summary-table th{background:transparent;text-align:left;color:#4d6177;font-weight:700;font-size:12px;padding:7px 10px;border-bottom:1px solid #d9e2ec}
+  .import-summary-table td{padding:8px 10px;border-bottom:1px solid #e2e9f0}
+  .import-summary-table th:not(:first-child),.import-summary-table td:not(:first-child){text-align:right}
+  .import-result-actions{border-top:1px solid #d8e2ec;display:flex;justify-content:flex-end;margin-top:12px;padding-top:12px}
+  .import-result-extra{font-size:12.5px;color:#526679;margin:10px 0 0}
+  .import-success-details{border-top:1px solid #cddfed;padding-top:10px;margin-top:10px}
+  .import-success-details summary{cursor:pointer;color:#17477d;font-size:13px;font-weight:700}
+  .import-success-details summary:focus-visible{outline:2px solid #8aa3bf;outline-offset:3px}
+  .import-success-details .import-summary-table th{border-color:#d0deec}
+  @media(max-width:570px){.import-result-panel{padding:12px}.import-count{flex:1 1 100px}.import-flow-hint{display:none}}
   .import-details{background:#edf4fc;border:1px solid #c6dbf2;border-radius:9px;margin-top:14px;padding:14px 15px;font-size:13.5px;color:#3f4c59}
   .import-details summary{color:#183b61;font-weight:800;font-size:15.5px;line-height:1.45;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
   .import-details summary::-webkit-details-marker{display:none}
@@ -116,14 +153,15 @@
     <span class="import-id-icon" aria-hidden="true">i</span>
     <div>
       <strong class="import-id-title">ID gerado automaticamente</strong>
-      <p>Você não precisa preencher o campo <code>_id</code> na aba <strong>Alunos</strong>. Informe <strong>Nome</strong> e <strong>EOL</strong>, que são obrigatórios. Ao confirmar a importação, o V.I.D.E. gera automaticamente um ID único para cada novo aluno.</p>
+      <p class="import-id-full">Você não precisa preencher o campo <code>_id</code> na aba <strong>Alunos</strong>. Informe <strong>Nome</strong> e <strong>EOL</strong>, que são obrigatórios. Ao confirmar a importação, o V.I.D.E. gera automaticamente um ID único para cada novo aluno.</p>
+      <p class="import-id-short">Na aba <strong>Alunos</strong>, informe <strong>Nome e EOL</strong>. O campo <code>_id</code> é gerado automaticamente.</p>
     </div>
   </div>
   <div class="import-security-banner" role="note" aria-label="Atenção: somente dados fictícios">
     <strong>Atenção: somente dados fictícios.</strong> Este é um protótipo acadêmico, não preparado para operar com dados reais de estudantes.
   </div>
-  <div class="import-flow" role="note" aria-label="Etapas e garantias da importação">
-    <strong class="import-flow-title">Como funciona a importação</strong>
+  <details class="import-flow" id="etapasImportacaoV2" open>
+    <summary class="import-flow-title">Como funciona a importação <span class="import-flow-hint">3 etapas · clique para expandir ou recolher</span></summary>
     <div class="import-flow-steps">
       <div class="import-flow-step"><span class="import-step-number">1</span><div><span class="import-step-title">Selecionar arquivo</span><span class="import-step-desc">Escolha o Excel ou CSV com dados fictícios.</span></div></div>
       <span class="import-flow-arrow" aria-hidden="true">→</span>
@@ -132,7 +170,7 @@
       <div class="import-flow-step"><span class="import-step-number">3</span><div><span class="import-step-title">Confirmar importação</span><span class="import-step-desc">Somente a confirmação adiciona registros.</span></div></div>
     </div>
     <p class="import-flow-note"><b>Verificar planilha não grava dados.</b> O sistema confere campos, vínculos e possíveis duplicidades. <b>Os registros existentes são preservados.</b></p>
-  </div>
+  </details>
   <div class="import-controls">
     <div class="import-file">
       <label for="arquivoPlanilhaV2">Arquivo Excel (.xlsx) ou CSV (.csv)</label>
@@ -154,13 +192,20 @@
     <p><strong>Verificação:</strong> o botão Verificar planilha confere os dados e apresenta um resumo sem gravar registros. Somente Confirmar importação adiciona registros.</p>
     <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
   </details>
-  <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
-  <div class="actions" style="margin-top:6px"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
-  <div id="confirmacaoImportacaoV2" class="import-confirmation" role="status" aria-live="polite" hidden>
+  <section id="painelResultadoV2" class="import-result-panel" aria-label="Resultado da verificação" hidden>
+    <div id="resultadoV2" role="status" aria-live="polite"></div>
+    <div id="acoesImportacaoV2" class="import-result-actions" hidden>
+      <button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()">Confirmar importação</button>
+    </div>
+  </section>
+  <section id="confirmacaoImportacaoV2" class="import-confirmation" role="status" aria-live="polite" hidden>
     <strong>✓ Importação concluída!</strong>
     <p id="mensagemConfirmacaoV2"></p>
-    <pre id="detalhesConfirmacaoV2"></pre>
-  </div>
+    <details id="detalhesConfirmacaoV2" class="import-success-details">
+      <summary>Ver detalhes por módulo</summary>
+      <div id="listaDetalhesConfirmacaoV2"></div>
+    </details>
+  </section>
 </div>
 <div class="panel" id="painelImportacaoCSV" hidden>
     <h2>Importação em lote — somente alunos fictícios</h2>
@@ -350,6 +395,10 @@
 const app={aluno:null,modulo:'Contatos',tela:'busca',anexo:null};
 
 let entradaPlanilhaV2=null;
+const NOMES_MODULOS_IMPORTACAO_V2={
+ Alunos:'Alunos',Contatos:'Contatos',Atestados:'Atestados',Atendimentos:'Atendimentos',
+ Ocorrencias:'Ocorrências',Evidencias:'Evidências',EducacaoEspecial:'Educação Especial'
+};
 function abrirImportacaoV2(){
  document.getElementById('painelImportacaoPlanilha').hidden=false;
  atualizarArquivoImportacaoV2();
@@ -362,29 +411,35 @@ function fecharImportacaoV2(){
 function atualizarArquivoImportacaoV2(){
  const arquivo=document.getElementById('arquivoPlanilhaV2').files[0];
  document.getElementById('campoAbaCSVV2').hidden=!arquivo||!/\.csv$/i.test(arquivo.name);
+ document.getElementById('painelImportacaoPlanilha').classList.toggle('import-file-selected',!!arquivo);
+ document.getElementById('etapasImportacaoV2').open=!arquivo;
  limparImportacaoV2();
 }
 function limparImportacaoV2(){
  entradaPlanilhaV2=null;
- const botaoConfirmar=document.getElementById('btnImportarV2');
- botaoConfirmar.hidden=true;
- botaoConfirmar.disabled=false;
- botaoConfirmar.textContent='Confirmar importação';
- botaoConfirmar.className='primary';
- const info=document.getElementById('resultadoV2');
- info.hidden=true;
- info.className='aviso';
- info.textContent='';
+ const botao=document.getElementById('btnImportarV2');
+ botao.disabled=false;
+ botao.textContent='Confirmar importação';
+ botao.className='primary';
+ document.getElementById('acoesImportacaoV2').hidden=true;
+ const painel=document.getElementById('painelResultadoV2');
+ painel.hidden=true;
+ painel.classList.remove('import-result-error');
+ document.getElementById('resultadoV2').replaceChildren();
  const conclusao=document.getElementById('confirmacaoImportacaoV2');
  conclusao.hidden=true;
  document.getElementById('mensagemConfirmacaoV2').textContent='';
- document.getElementById('detalhesConfirmacaoV2').textContent='';
+ document.getElementById('listaDetalhesConfirmacaoV2').replaceChildren();
+ document.getElementById('detalhesConfirmacaoV2').open=false;
 }
-function mostrarResultadoImportacaoV2(mensagem, erro=false){
+function mostrarResultadoImportacaoV2(mensagem,erro=false){
+ const painel=document.getElementById('painelResultadoV2');
+ painel.classList.toggle('import-result-error',erro);
  const info=document.getElementById('resultadoV2');
- info.className=erro?'aviso erro':'aviso';
  info.textContent=String(mensagem||'');
- info.hidden=!mensagem;
+ info.style.whiteSpace='pre-line';
+ painel.hidden=!mensagem;
+ document.getElementById('acoesImportacaoV2').hidden=true;
  if(mensagem)info.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function converterBase64V2(arquivo){
@@ -395,12 +450,65 @@ function converterBase64V2(arquivo){
   reader.readAsDataURL(arquivo);
  });
 }
-function resumoImportacaoV2(d){
- const linhas=Object.entries(d.contagem||{}).filter(([nome,v])=>v.origem).map(([nome,v])=>
- nome+': '+v.novos+' novos / '+v.ignorados+' ignorados (total '+v.origem+')');
- if(d.ignorado&&d.ignorado.length)linhas.push('Abas fora do escopo: '+d.ignorado.join(', '));
- linhas.push('Total de registros novos: '+d.totalNovo);
- return linhas.join('\n');
+function criarTabelaModulosV2(d){
+ const nomes=Object.entries(d.contagem||{}).filter(([,v])=>Number(v.origem)>0)
+   .sort((a,b)=>(NOMES_MODULOS_IMPORTACAO_V2[a[0]]||a[0]).localeCompare(
+     NOMES_MODULOS_IMPORTACAO_V2[b[0]]||b[0],'pt-BR'));
+ if(!nomes.length)return null;
+ const tabela=document.createElement('table');
+ tabela.className='import-summary-table';
+ const cabecalho=document.createElement('thead');
+ const linhaCab=document.createElement('tr');
+ ['Módulo','Novos','Ignorados'].forEach(t=>{
+  const th=document.createElement('th');th.textContent=t;linhaCab.appendChild(th);
+ });
+ cabecalho.appendChild(linhaCab);tabela.appendChild(cabecalho);
+ const corpo=document.createElement('tbody');
+ nomes.forEach(([nome,v])=>{
+  const linha=document.createElement('tr');
+  [NOMES_MODULOS_IMPORTACAO_V2[nome]||nome,Number(v.novos)||0,Number(v.ignorados)||0].forEach(valor=>{
+   const td=document.createElement('td');td.textContent=String(valor);linha.appendChild(td);
+  });corpo.appendChild(linha);
+ });
+ tabela.appendChild(corpo);
+ return tabela;
+}
+function apresentarVerificacaoV2(d){
+ const painel=document.getElementById('painelResultadoV2');
+ const info=document.getElementById('resultadoV2');
+ painel.classList.remove('import-result-error');
+ info.replaceChildren();info.style.whiteSpace='';
+ const novos=Number(d.totalNovo)||0;
+ const ignorados=Object.values(d.contagem||{}).reduce((n,v)=>n+(Number(v.ignorados)||0),0);
+ const titulo=document.createElement('strong');
+ titulo.className='import-result-heading';
+ titulo.textContent=novos?'Verificação concluída':'Verificação concluída — nenhum registro novo';
+ const descricao=document.createElement('p');
+ descricao.className='import-result-copy';
+ descricao.textContent=novos
+  ?'Confira os registros abaixo antes de confirmar. Nenhum dado foi gravado.'
+  :'Os registros já existem ou não há novos dados para adicionar. Nenhuma alteração foi realizada.';
+ info.append(titulo,descricao);
+ const contadores=document.createElement('div');contadores.className='import-counts';
+ [[novos,'Registros novos'],[ignorados,'Ignorados']].forEach(([valor,rotulo])=>{
+  const bloco=document.createElement('div');bloco.className='import-count';
+  const numero=document.createElement('strong');numero.textContent=String(valor);
+  const legenda=document.createElement('span');legenda.textContent=rotulo;
+  bloco.append(numero,legenda);contadores.appendChild(bloco);
+ });
+ info.appendChild(contadores);
+ const tabela=criarTabelaModulosV2(d);
+ if(tabela)info.appendChild(tabela);
+ if(d.ignorado&&d.ignorado.length){
+  const nota=document.createElement('p');nota.className='import-result-extra';
+  nota.textContent='Abas não importadas: '+d.ignorado.join(', ');
+  info.appendChild(nota);
+ }
+ painel.hidden=false;
+ const botao=document.getElementById('btnImportarV2');
+ botao.disabled=false;
+ document.getElementById('acoesImportacaoV2').hidden=novos===0;
+ painel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function analisarImportacaoV2Tela(){
  limparImportacaoV2();
@@ -417,18 +525,7 @@ async function analisarImportacaoV2Tela(){
   const entrada={nome:arquivo.name,base64:base64,moduloCsv:document.getElementById('abaCSVV2').value};
   const analise=await pedir('analisarImportacaoV2',entrada);
   entradaPlanilhaV2=entrada;
-  const quantidadeNova=Number(analise.totalNovo)||0;
-  const botaoConfirmar=document.getElementById('btnImportarV2');
-  if(quantidadeNova===0){
-   botaoConfirmar.hidden=true;
-   const info=document.getElementById('resultadoV2');info.className='aviso import-zero-state';info.replaceChildren();const titulo=document.createElement('div');titulo.className='import-zero-title';titulo.textContent='Verificação concluída — nenhum registro novo';const descricao=document.createElement('div');descricao.className='import-zero-description';descricao.textContent='Os registros do arquivo já existem ou não há registros novos. Nenhuma alteração foi realizada.';const detalhes=document.createElement('div');detalhes.className='import-zero-details';detalhes.textContent=resumoImportacaoV2(analise);info.append(titulo,descricao,detalhes);info.hidden=false;
-  }else{
-   botaoConfirmar.hidden=false;
-   mostrarResultadoImportacaoV2('Verificação concluída.\n'+resumoImportacaoV2(analise));
-   botaoConfirmar.disabled=false;
-   botaoConfirmar.className='primary';
-   botaoConfirmar.textContent='Confirmar importação';
-  }
+  apresentarVerificacaoV2(analise);
   aviso('');
  }catch(e){
   limparImportacaoV2();
@@ -442,32 +539,38 @@ async function confirmarImportacaoV2(){
  if(!entradaPlanilhaV2)return;
  if(!confirm('Importar somente registros fictícios? Os registros existentes serão preservados.'))return;
  const botao=document.getElementById('btnImportarV2');
- botao.disabled=true;
- botao.textContent='Importando...';
+ botao.disabled=true;botao.textContent='Importando...';
  mostrarResultadoImportacaoV2('Importação em andamento. Aguarde a confirmação...');
  try{
   const result=await pedir('importarPlanilhaV2',entradaPlanilhaV2);
   const total=Number(result.totalNovo)||0;
   entradaPlanilhaV2=null;
-  botao.hidden=true;
   document.getElementById('arquivoPlanilhaV2').value='';
   document.getElementById('campoAbaCSVV2').hidden=true;
-  const info=document.getElementById('resultadoV2');
-  info.hidden=true;
-  info.textContent='';
+  document.getElementById('painelResultadoV2').hidden=true;
   const conclusao=document.getElementById('confirmacaoImportacaoV2');
   document.getElementById('mensagemConfirmacaoV2').textContent=
-    (total===1?'Foi adicionado 1 registro.':'Foram adicionados '+total+' registros.')+
-    ' Os registros já cadastrados foram preservados.';
-  document.getElementById('detalhesConfirmacaoV2').textContent=resumoImportacaoV2(result);
+   total===0?'Nenhum registro novo foi adicionado. Os registros existentes foram preservados.'
+   :total===1?'1 registro importado com sucesso. Os registros existentes foram preservados.'
+   :total+' registros importados com sucesso. Os registros existentes foram preservados.';
+  const lista=document.getElementById('listaDetalhesConfirmacaoV2');
+  lista.replaceChildren();
+  const tabela=criarTabelaModulosV2(result);
+  if(tabela)lista.appendChild(tabela);
+  const detalhes=document.getElementById('detalhesConfirmacaoV2');
+  detalhes.hidden=!tabela&&!(result.ignorado&&result.ignorado.length);
+  detalhes.open=false;
+  if(result.ignorado&&result.ignorado.length){
+   const nota=document.createElement('p');nota.className='import-result-extra';
+   nota.textContent='Abas não importadas: '+result.ignorado.join(', ');lista.appendChild(nota);
+  }
   conclusao.hidden=false;
   conclusao.scrollIntoView({behavior:'smooth',block:'nearest'});
   buscar();
  }catch(e){
   mostrarResultadoImportacaoV2('Não foi possível concluir a importação: '+(e?.message||String(e)),true);
  }finally{
-  botao.disabled=false;
-  botao.textContent='Confirmar importação';
+  botao.disabled=false;botao.textContent='Confirmar importação';
  }
 }
 
