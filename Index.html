@@ -72,7 +72,6 @@
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
-  #btnImportarV2.import-empty-button:disabled{opacity:1;cursor:default;background:#eef1f4;color:#566575;border:1px solid #ced7e1}
   #resultadoV2.import-zero-state{background:#f6f7f8;border:1px solid #cbd5df;color:#344454;margin-bottom:4px}.import-zero-title{font-size:16px;font-weight:800;color:#24394d;margin-bottom:5px}.import-zero-description{font-size:13.5px;margin-bottom:8px}.import-zero-details{font-size:12.5px;color:#526679;white-space:pre-line}
   .import-confirmation{background:#edf6ff;border:1px solid #bcd8ef;border-left:5px solid #17477d;border-radius:9px;padding:15px 17px;margin-top:14px;color:#183f63}
   .import-confirmation strong{display:block;font-size:17px;margin-bottom:5px;color:#123c67}
@@ -420,13 +419,11 @@ async function analisarImportacaoV2Tela(){
   entradaPlanilhaV2=entrada;
   const quantidadeNova=Number(analise.totalNovo)||0;
   const botaoConfirmar=document.getElementById('btnImportarV2');
-  botaoConfirmar.hidden=false;
   if(quantidadeNova===0){
+   botaoConfirmar.hidden=true;
    const info=document.getElementById('resultadoV2');info.className='aviso import-zero-state';info.replaceChildren();const titulo=document.createElement('div');titulo.className='import-zero-title';titulo.textContent='Verificação concluída — nenhum registro novo';const descricao=document.createElement('div');descricao.className='import-zero-description';descricao.textContent='Os registros do arquivo já existem ou não há registros novos. Nenhuma alteração foi realizada.';const detalhes=document.createElement('div');detalhes.className='import-zero-details';detalhes.textContent=resumoImportacaoV2(analise);info.append(titulo,descricao,detalhes);info.hidden=false;
-   botaoConfirmar.disabled=true;
-   botaoConfirmar.className='secondary import-empty-button';
-   botaoConfirmar.textContent='Nenhum registro para importar';
   }else{
+   botaoConfirmar.hidden=false;
    mostrarResultadoImportacaoV2('Verificação concluída.\n'+resumoImportacaoV2(analise));
    botaoConfirmar.disabled=false;
    botaoConfirmar.className='primary';
