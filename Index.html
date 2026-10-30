@@ -105,6 +105,9 @@
   .import-result-panel.import-result-neutral .import-result-heading{color:#344454}
   .import-result-panel .import-result-copy:last-child{margin-bottom:0}
   .import-result-secondary{font-size:13px;color:#4c6260;margin:6px 0 0;line-height:1.5}
+  .import-modules-visible{border-top:1px solid #d5e3dc;padding-top:8px;margin-top:12px}
+  .import-modules-visible .import-summary-table th{padding-top:10px}
+  .import-result-panel.import-result-neutral .import-modules-visible{border-color:#d9e1e7}
   .import-check-details{border-top:1px solid #d5e3dc;padding-top:10px;margin-top:11px;color:#344c44}
   .import-check-details summary{cursor:pointer;font-size:13px;font-weight:700;color:#426153}
   .import-check-details summary:focus-visible{outline:2px solid #8aa3bf;outline-offset:3px}
@@ -537,11 +540,8 @@ function apresentarVerificacaoV2(d){
  }
  const modulos=Object.values(d.contagem||{}).filter(v=>Number(v.origem)>0).length;
  if(modulos>1){
-  const detalhes=document.createElement('details');
-  detalhes.className='import-check-details';
-  const legenda=document.createElement('summary');
-  legenda.textContent='Ver detalhes por módulo';
-  detalhes.appendChild(legenda);
+  const detalhes=document.createElement('div');
+  detalhes.className='import-modules-visible';
   const tabela=criarTabelaModulosV2(d);
   if(tabela)detalhes.appendChild(tabela);
   info.appendChild(detalhes);
