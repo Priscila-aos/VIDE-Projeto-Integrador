@@ -355,7 +355,17 @@ function atualizarArquivoImportacaoV2(){
 function limparImportacaoV2(){
  entradaPlanilhaV2=null;
  document.getElementById('btnImportarV2').hidden=true;
- const info=document.getElementById('resultadoV2');info.hidden=true;info.textContent='';
+ const info=document.getElementById('resultadoV2');
+ info.hidden=true;
+ info.className='aviso';
+ info.textContent='';
+}
+function mostrarResultadoImportacaoV2(mensagem, erro=false){
+ const info=document.getElementById('resultadoV2');
+ info.className=erro?'aviso erro':'aviso';
+ info.textContent=String(mensagem||'');
+ info.hidden=!mensagem;
+ if(mensagem)info.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function converterBase64V2(arquivo){
  return new Promise((resolve,reject)=>{
@@ -375,21 +385,28 @@ function resumoImportacaoV2(d){
 async function analisarImportacaoV2Tela(){
  limparImportacaoV2();
  const arquivo=document.getElementById('arquivoPlanilhaV2').files[0];
- if(!arquivo){aviso('Selecione uma planilha Excel (.xlsx) ou CSV.',true);return;}
- if(!/\.(xlsx|csv)$/i.test(arquivo.name)){aviso('Formato aceito: .xlsx ou .csv.',true);return;}
- if(arquivo.size>5000000){aviso('Arquivo maior que 5 MB.',true);return;}
- const botao=document.getElementById('btnAnaliseV2');botao.disabled=true;
+ if(!arquivo){mostrarResultadoImportacaoV2('Selecione uma planilha Excel (.xlsx) ou CSV (.csv) para verificar.',true);return;}
+ if(!/\.(xlsx|csv)$/i.test(arquivo.name)){mostrarResultadoImportacaoV2('Formato não aceito. Utilize um arquivo .xlsx ou .csv.',true);return;}
+ if(arquivo.size>5000000){mostrarResultadoImportacaoV2('O arquivo ultrapassa o limite de 5 MB.',true);return;}
+ const botao=document.getElementById('btnAnaliseV2');
+ botao.disabled=true;
+ botao.textContent='Verificando...';
+ mostrarResultadoImportacaoV2('Verificando o arquivo e os registros. Aguarde...');
  try{
   const base64=await converterBase64V2(arquivo);
   const entrada={nome:arquivo.name,base64:base64,moduloCsv:document.getElementById('abaCSVV2').value};
   const analise=await pedir('analisarImportacaoV2',entrada);
   entradaPlanilhaV2=entrada;
-  const info=document.getElementById('resultadoV2');
-  info.textContent=resumoImportacaoV2(analise);info.hidden=false;
+  mostrarResultadoImportacaoV2('Verificação concluída.\n'+resumoImportacaoV2(analise));
   document.getElementById('btnImportarV2').hidden=!analise.totalNovo;
   aviso('');
- }catch(e){limparImportacaoV2();aviso(e.message||String(e),true);}
- finally{botao.disabled=false;}
+ }catch(e){
+  limparImportacaoV2();
+  mostrarResultadoImportacaoV2('Não foi possível verificar a planilha: '+(e?.message||String(e)),true);
+ }finally{
+  botao.disabled=false;
+  botao.textContent='Verificar planilha';
+ }
 }
 async function confirmarImportacaoV2(){
  if(!entradaPlanilhaV2)return;
