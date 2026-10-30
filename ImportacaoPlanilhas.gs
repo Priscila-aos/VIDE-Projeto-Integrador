@@ -62,10 +62,11 @@ function vide2Texto_(elem) {
   return saida;
 }
 function vide2PlanilhaXLSX_(bytes) {
-  const blob=Utilities.newBlob(bytes,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','origem.xlsx');
+  // XLSX é um pacote ZIP. O descompactador do Apps Script espera um blob ZIP.
+  const blob=Utilities.newBlob(bytes,'application/zip','origem.zip');
   let arquivos;
   try { arquivos=Utilities.unzip(blob); }
-  catch(e){ throw new Error('Não foi possível abrir o arquivo Excel (.xlsx).'); }
+  catch(e){ throw new Error('Falha ao descompactar o Excel (.xlsx): '+(e.message||String(e))); }
   const mapa={};let totalTamanho=0;
   arquivos.forEach(a=>{
     totalTamanho+=a.getBytes().length;
