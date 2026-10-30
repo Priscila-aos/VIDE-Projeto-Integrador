@@ -43,14 +43,14 @@
   .filebox input{max-width:550px}.record p{overflow-wrap:anywhere}
   .special{background:#fff8e6;border:1px solid #efd99c;border-radius:8px;padding:12px;margin:12px 0}
   /* Área de importação: avisos objetivos e ajuda opcional. */
-  #painelImportacaoPlanilha{padding:17px 20px}
+  #painelImportacaoPlanilha{padding:16px 18px}
   #painelImportacaoPlanilha h2{margin:0 0 12px;font-size:18px}
-  .import-id-banner{background:#f1f3f5;border:1px solid #cbd5e1;border-left:5px solid #64748b;border-radius:8px;padding:10px 13px;margin:0 0 9px;color:#334155}
-  .import-id-title{font-size:14px;font-weight:800;color:#334155;display:block;margin-bottom:3px}
+  .import-id-banner{background:#f4f4f3;border:1px solid #c5c9cc;border-left:5px solid #525b65;border-radius:8px;padding:10px 13px;margin:0 0 9px;color:#263340}
+  .import-id-title{font-size:15px;font-weight:800;color:#263340;display:block;margin-bottom:3px}
   .import-id-banner p{font-size:13px;line-height:1.5;margin:0}
   .import-id-banner code,.import-details code{background:#e2e8f0;border-radius:4px;padding:1px 5px;color:#334155;font-weight:750}
-  .import-security-banner{background:#fff8e8;border:1px solid #ecd59c;border-left:5px solid #b87b10;border-radius:8px;padding:10px 13px;margin:0 0 13px;color:#63420e;font-size:12.5px;line-height:1.45}
-  .import-security-banner strong{color:#714507}
+  .import-security-banner{background:#fffbf2;border:1px solid #e3d6b8;border-left:5px solid #b6964d;border-radius:8px;padding:10px 13px;margin:0 0 11px;color:#664e25;font-size:13px;line-height:1.5}
+  .import-security-banner strong{color:#735019}
   .import-controls{display:flex;align-items:end;gap:10px;flex-wrap:wrap}
   .import-file{flex:1 1 300px;min-width:235px}
   .import-file label,.import-csv label{font-size:12px;margin:0 0 5px}
@@ -60,18 +60,22 @@
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
-  .import-flow{background:#f5f7fa;border:1px solid #d8e0e9;border-radius:8px;padding:11px 13px;margin:11px 0 12px;color:#253b54}
-  .import-flow strong{display:block;font-size:13.5px;color:#213b58;margin-bottom:7px}
+  .import-flow{background:#fafafa;border:1px solid #cbd1d8;border-left:5px solid #424b57;border-radius:8px;padding:10px 13px;margin:10px 0 12px;color:#253441}
+  .import-flow strong{display:block;font-size:15px;color:#273540;margin-bottom:8px}
   .import-flow-steps{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:650}
-  .import-flow-step{background:white;border:1px solid #c9d4e2;border-radius:6px;padding:6px 10px}
+  .import-flow-step{background:#f1f3f5;border:1px solid #c9ced5;color:#253340;border-radius:6px;padding:6px 10px}
   .import-flow-arrow{color:#687d93;font-weight:700}
-  .import-flow-note{font-size:13px;margin:8px 0 0;line-height:1.5}
-  .import-flow-note b{color:#1f3e5c}
+  .import-flow-note{font-size:13.5px;margin:8px 0 0;line-height:1.5}
+  .import-flow-note b{color:#253340}
   #painelImportacaoPlanilha .import-controls{margin-top:8px}
-  .import-details{border-top:1px solid #e1e7ef;margin-top:12px;padding-top:9px;font-size:12px;color:#526174}
-  .import-details summary{color:#17477d;font-weight:650;font-size:12.5px;cursor:pointer}
-  .import-details[open] summary{margin-bottom:8px}
-  .import-details p{margin:6px 0;line-height:1.55}
+  .import-details{background:#f4f5f6;border:1px solid #c8cfd7;border-left:5px solid #525b65;border-radius:8px;margin-top:12px;padding:12px 14px;font-size:13.5px;color:#3f4c59}
+  .import-details summary{color:#233444;font-weight:800;font-size:15px;line-height:1.45;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .import-details summary::-webkit-details-marker{display:none}
+  .import-details summary::after{content:"+";font-size:21px;line-height:1;color:#3d4c5c;font-weight:500}
+  .import-details[open] summary::after{content:"−"}
+  .import-details summary:focus-visible{outline:3px solid #8aa3bf;outline-offset:4px}
+  .import-details[open] summary{margin-bottom:10px}
+  .import-details p{margin:8px 0;line-height:1.6}
   @media(max-width:650px){#painelImportacaoPlanilha{padding:14px}.import-controls{gap:9px}.import-file{flex-basis:100%}.import-csv{flex:1 1 160px}}
   .filelinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filelinks a{border:1px solid #9cbce0;border-radius:7px;color:#17477d;background:#edf5ff;text-decoration:none;font-weight:600}.filelinks a:hover{background:#e1edfa}
 </style>
@@ -121,12 +125,12 @@
     <button class="primary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
     <button class="secondary" type="button" onclick="fecharImportacaoV2()">Fechar</button>
   </div>
-  <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite de 2,5 MB por arquivo.</p>
+  <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite de 5 MB por arquivo.</p>
   <details class="import-details">
     <summary>Como preparar a planilha, vincular registros e entender os limites</summary>
     <p><strong>Identificadores:</strong> para cadastrar alunos, Nome e EOL são obrigatórios. O <code>_id</code> pode ficar vazio, pois será gerado automaticamente. EOLs já cadastrados são ignorados, sem alterar registros existentes.</p>
     <p><strong>Registros de outras abas:</strong> indique o aluno por seu EOL ou por <code>aluno_id</code> correspondente ao <code>_id</code> da aba Alunos do arquivo de origem. Para usar <code>aluno_id</code>, os IDs dos alunos na origem precisam estar preenchidos. Novos registros recebem IDs próprios.</p>
-    <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. <strong>Não importa</strong> Anexos, Notas, Usuários, arquivos ou senhas. Limite de 2,5 MB por arquivo e 3.000 linhas por aba.</p>
+    <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. <strong>Não importa</strong> Anexos, Notas, Usuários, arquivos ou senhas. Limite de 5 MB por arquivo e 3.000 linhas por aba.</p>
     <p><strong>Confirmação:</strong> somente o botão Confirmar importação grava os dados, após a análise.</p>
     <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
   </details>
@@ -360,7 +364,7 @@ async function analisarImportacaoV2Tela(){
  const arquivo=document.getElementById('arquivoPlanilhaV2').files[0];
  if(!arquivo){aviso('Selecione uma planilha Excel (.xlsx) ou CSV.',true);return;}
  if(!/\.(xlsx|csv)$/i.test(arquivo.name)){aviso('Formato aceito: .xlsx ou .csv.',true);return;}
- if(arquivo.size>2500000){aviso('Arquivo maior que 2,5 MB.',true);return;}
+ if(arquivo.size>5000000){aviso('Arquivo maior que 5 MB.',true);return;}
  const botao=document.getElementById('btnAnaliseV2');botao.disabled=true;
  try{
   const base64=await converterBase64V2(arquivo);
