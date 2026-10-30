@@ -494,61 +494,31 @@ function criarTabelaModulosV2(d){
 function apresentarVerificacaoV2(d){
  const painel=document.getElementById('painelResultadoV2');
  const info=document.getElementById('resultadoV2');
- painel.classList.remove('import-result-error','import-result-ready','import-result-neutral');
- info.replaceChildren();
- info.style.whiteSpace='';
+ painel.classList.remove('import-result-error');
+ info.replaceChildren();info.style.whiteSpace='';
  const novos=Number(d.totalNovo)||0;
- const valores=Object.values(d.contagem||{});
- const existentes=valores.reduce((n,v)=>n+(Number(v.ignorados)||0),0);
- const totalArquivo=valores.reduce((n,v)=>n+(Number(v.origem)||0),0);
+ const ignorados=Object.values(d.contagem||{}).reduce((n,v)=>n+(Number(v.ignorados)||0),0);
  const titulo=document.createElement('strong');
  titulo.className='import-result-heading';
+ titulo.textContent=novos?'Verificação concluída':'Verificação concluída — nenhum registro novo';
  const descricao=document.createElement('p');
  descricao.className='import-result-copy';
-
- if(novos>0){
-  painel.classList.add('import-result-ready');
-  titulo.textContent='Verificação concluída';
-  const principal=document.createElement('div');
-  principal.className='import-main-result';
-  const quantidade=document.createElement('strong');
-  quantidade.className='import-main-number';
-  quantidade.textContent=String(novos);
-  const rotulo=document.createElement('span');
-  rotulo.className='import-main-label';
-  rotulo.textContent=novos===1?'Registro disponível para importação':'Registros disponíveis para importação';
-  principal.append(quantidade,rotulo);
-  descricao.textContent='Nenhum dado foi gravado.';
-  info.append(titulo,principal,descricao);
-  if(existentes>0){
-   const nota=document.createElement('p');
-   nota.className='import-result-secondary';
-   nota.textContent=existentes===1
-    ?'1 registro não será adicionado porque já existe ou está repetido no arquivo.'
-    :existentes+' registros não serão adicionados porque já existem ou estão repetidos no arquivo.';
-   info.appendChild(nota);
-  }
- }else{
-  painel.classList.add('import-result-neutral');
-  titulo.textContent='Nenhum registro novo encontrado';
-  descricao.textContent=totalArquivo===0
-   ?'O arquivo não contém registros para importar. Nenhuma alteração foi realizada.'
-   :(totalArquivo===1
-      ?'O registro do arquivo já existe ou está repetido. Nenhuma alteração foi realizada.'
-      :'Os '+totalArquivo+' registros deste arquivo já existem ou estão repetidos. Nenhuma alteração foi realizada.');
-  info.append(titulo,descricao);
- }
- const modulos=Object.values(d.contagem||{}).filter(v=>Number(v.origem)>0).length;
- if(modulos>1){
-  const detalhes=document.createElement('div');
-  detalhes.className='import-modules-visible';
-  const tabela=criarTabelaModulosV2(d);
-  if(tabela)detalhes.appendChild(tabela);
-  info.appendChild(detalhes);
- }
+ descricao.textContent=novos
+  ?'Confira os registros abaixo antes de confirmar. Nenhum dado foi gravado.'
+  :'Os registros já existem ou não há novos dados para adicionar. Nenhuma alteração foi realizada.';
+ info.append(titulo,descricao);
+ const contadores=document.createElement('div');contadores.className='import-counts';
+ [[novos,'Registros novos'],[ignorados,'Não adicionados']].forEach(([valor,rotulo])=>{
+  const bloco=document.createElement('div');bloco.className='import-count';
+  const numero=document.createElement('strong');numero.textContent=String(valor);
+  const legenda=document.createElement('span');legenda.textContent=rotulo;
+  bloco.append(numero,legenda);contadores.appendChild(bloco);
+ });
+ info.appendChild(contadores);
+ const tabela=criarTabelaModulosV2(d);
+ if(tabela)info.appendChild(tabela);
  if(d.ignorado&&d.ignorado.length){
-  const nota=document.createElement('p');
-  nota.className='import-result-extra';
+  const nota=document.createElement('p');nota.className='import-result-extra';
   nota.textContent='Abas não importadas: '+d.ignorado.join(', ');
   info.appendChild(nota);
  }
