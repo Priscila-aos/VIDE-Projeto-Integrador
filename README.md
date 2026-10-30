@@ -30,13 +30,25 @@ Mais capturas: [cadastro do aluno](screenshots/03-cadastro-aluno.jpg) · [contat
 | Evidências pedagógicas | Cadastro de atividade, objetivo, descrição, responsável e anexos |
 | Educação Especial | Orientações pedagógicas fictícias, sem restrição de acesso por perfil |
 | Relatório individual | Consolidação do histórico por aluno, período opcional e impressão/arquivo PDF |
+| Importação Excel/CSV | Verificação prévia, prevenção de registros repetidos, identificação automática e confirmação antes da gravação |
+| Resultados paginados | Até 10 alunos por página, navegação Anterior/Próxima, sem restringir o total de cadastros |
 
 A leitura de registros é vinculada ao identificador interno do estudante (`aluno_id`). A planilha contém oito abas de dados; a aba oculta `_VIDE_Config` pode guardar a referência à pasta de anexos.
+
+## Atualização funcional — 30/10/2026
+
+A versão mais recente do protótipo inclui **importação Excel/CSV** e **paginação da busca**. Na importação, o usuário seleciona um arquivo, confere o resumo **Registros novos / Não adicionados** sem gravar nada e confirma apenas quando houver novos registros. Após importar, a interface apresenta uma confirmação verde com opção **Ver detalhes por módulo**. A busca exibe **até 10 alunos por página**.
+
+**[Leia o complemento técnico de 30/10/2026, com resultados de testes e orientações de uso](docs/ATUALIZACOES_30-10-2026.md).**
+
+A documentação ilustrada de 30/10 contém prints das telas de importação, confirmação e paginação. As novas capturas ainda não estão publicadas individualmente em `screenshots/`; as imagens atualmente presentes nessa pasta documentam os fluxos anteriores.
 
 ## Estrutura de código
 
 ```text
 Código.gs             Back-end: planilha, validações, CRUD, anexos e relatório
+Importacao.gs         Rotinas auxiliares da importação
+ImportacaoPlanilhas.gs  Verificação e importação Excel/CSV
 Index.html            Interface atual, formulários e apresentação do relatório
 appsscript.json       Manifesto Apps Script: V8 e permissões
 legacy/               Arquivos HTML auxiliares preservados do projeto
@@ -50,14 +62,14 @@ O fluxo principal observado utiliza `Index.html`. Os arquivos em `legacy/` foram
 
 1. Crie uma **planilha Google nova, vazia e privada**. Não reutilize bases escolares reais.
 2. Na planilha, acesse **Extensões → Apps Script**.
-3. Insira o conteúdo de `Código.gs` no arquivo de script, crie/atualize o arquivo HTML com nome **Index** usando `Index.html` e configure `appsscript.json` com o manifesto fornecido. Inclua os HTML auxiliares se desejar preservar a estrutura completa.
+3. Insira o conteúdo de `Código.gs`, `Importacao.gs` e `ImportacaoPlanilhas.gs` em arquivos de script, crie/atualize o arquivo HTML com nome **Index** usando `Index.html` e configure `appsscript.json` com o manifesto fornecido. Inclua os HTML auxiliares se desejar preservar a estrutura completa.
 4. Salve e selecione **`PrepararAmbienteDeTestes`** na lista de funções. Execute uma vez; confira as abas criadas e quaisquer pedidos de autorização do Google.
 5. Recarregue a planilha; procure **V.I.D.E. — Projeto Integrado → Abrir sistema**.
 6. Cadastre **somente dados fictícios**. Siga os cenários do manual para testar cadastro, busca, anexos, relatórios e outros módulos.
 
 A pasta de anexos no Drive é criada e vinculada à planilha quando o mecanismo de upload precisa armazenar um arquivo. Arquivos de outro projeto no Drive não são copiados automaticamente.
 
-**Manual completo (explicação técnica + guia passo a passo com capturas):** [Documentação do V.I.D.E.](docs/Documentacao_Completa_VIDE.pdf)
+**Documentação-base (28/10/2026):** [PDF técnico e manual ilustrado](docs/Documentacao_Completa_VIDE.pdf). **Complemento funcional (30/10/2026):** [Importação, paginação e testes documentados](docs/ATUALIZACOES_30-10-2026.md). O PDF-base ainda não incorpora as imagens e seções adicionadas no Word de 30/10.
 
 ## Demonstração da versão integrada
 
