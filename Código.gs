@@ -116,7 +116,14 @@ function pesquisarAlunos(filtros) {
     (!termo || [a.nome,a.eol,a.ra].some(v => normalizar_(v).includes(termo))) &&
     (!serie || normalizar_(a.serie) === serie) &&
     (!periodo || normalizar_(a.periodo) === periodo));
-  return { total: achados.length, alunos: achados.slice(0, 200).map(limparInternos_) };
+  const porPagina = 10;
+  const totalPaginas = Math.max(1, Math.ceil(achados.length / porPagina));
+  const solicitada = Number(filtros.pagina);
+  const pagina = Number.isSafeInteger(solicitada) && solicitada > 0
+    ? Math.min(solicitada, totalPaginas) : 1;
+  const inicio = (pagina - 1) * porPagina;
+  return {total: achados.length, pagina: pagina, porPagina: porPagina, totalPaginas: totalPaginas,
+    alunos: achados.slice(inicio, inicio + porPagina).map(limparInternos_)};
 }
 function limparInternos_(obj) {
   const copia = Object.assign({}, obj);
