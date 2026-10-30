@@ -77,8 +77,8 @@
   .import-details-summary-wrap{display:flex;align-items:center;gap:12px;min-width:0}
   .import-details-icon{width:40px;height:40px;border-radius:50%;background:#d9e9fa;display:flex;align-items:center;justify-content:center;color:#1b4975;font-size:21px;font-weight:750;flex-shrink:0}
   .import-details-caption{display:block;font-size:12.5px;font-weight:400;color:#536780;margin-top:3px;line-height:1.35}
-  .import-details summary::after{content:"⌄";font-size:22px;line-height:1;color:#315b85;font-weight:700}
-  .import-details[open] summary::after{content:"⌃"}
+  .import-details summary::after{content:"";width:9px;height:9px;border-right:2px solid #315b85;border-bottom:2px solid #315b85;transform:rotate(45deg);margin:0 8px 5px 0;flex-shrink:0;transition:transform .18s ease}
+  .import-details[open] summary::after{transform:rotate(225deg);margin-bottom:-4px}
   .import-details summary:focus-visible{outline:3px solid #8aa3bf;outline-offset:4px}
   .import-details[open] summary{margin-bottom:10px}
   .import-details p{margin:8px 0;line-height:1.6}
