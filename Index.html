@@ -59,7 +59,15 @@
   .import-csv{flex:0 0 180px}
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
-  .import-footnote{font-size:12px;color:#526174;margin:8px 0 0}
+  .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
+  .import-flow{background:#f5f7fa;border:1px solid #d8e0e9;border-radius:8px;padding:11px 13px;margin:11px 0 12px;color:#253b54}
+  .import-flow strong{display:block;font-size:13.5px;color:#213b58;margin-bottom:7px}
+  .import-flow-steps{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:650}
+  .import-flow-step{background:white;border:1px solid #c9d4e2;border-radius:6px;padding:6px 10px}
+  .import-flow-arrow{color:#687d93;font-weight:700}
+  .import-flow-note{font-size:13px;margin:8px 0 0;line-height:1.5}
+  .import-flow-note b{color:#1f3e5c}
+  #painelImportacaoPlanilha .import-controls{margin-top:8px}
   .import-details{border-top:1px solid #e1e7ef;margin-top:12px;padding-top:9px;font-size:12px;color:#526174}
   .import-details summary{color:#17477d;font-weight:650;font-size:12.5px;cursor:pointer}
   .import-details[open] summary{margin-bottom:8px}
@@ -92,6 +100,15 @@
   <div class="import-security-banner" role="note" aria-label="Atenção: somente dados fictícios">
     <strong>ATENÇÃO — SOMENTE DADOS FICTÍCIOS.</strong> Este é um protótipo acadêmico, não preparado para operar com dados reais de estudantes.
   </div>
+  <div class="import-flow" role="note" aria-label="Etapas e garantias da importação">
+    <strong>Como funciona a importação</strong>
+    <div class="import-flow-steps">
+      <span class="import-flow-step">1. Analisar</span><span class="import-flow-arrow">→</span>
+      <span class="import-flow-step">2. Conferir o resumo</span><span class="import-flow-arrow">→</span>
+      <span class="import-flow-step">3. Confirmar importação</span>
+    </div>
+    <p class="import-flow-note"><b>Analisar não grava dados.</b> Somente a confirmação adiciona registros. <b>Os registros existentes são preservados.</b></p>
+  </div>
   <div class="import-controls">
     <div class="import-file">
       <label for="arquivoPlanilhaV2">Arquivo Excel (.xlsx) ou CSV (.csv)</label>
@@ -104,12 +121,12 @@
     <button class="primary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
     <button class="secondary" type="button" onclick="fecharImportacaoV2()">Fechar</button>
   </div>
-  <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite: 2,5 MB • Analisar não grava dados.</p>
+  <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite de 2,5 MB por arquivo.</p>
   <details class="import-details">
     <summary>Como preparar a planilha, vincular registros e entender os limites</summary>
     <p><strong>Identificadores:</strong> para cadastrar alunos, Nome e EOL são obrigatórios. O <code>_id</code> pode ficar vazio, pois será gerado automaticamente. EOLs já cadastrados são ignorados, sem alterar registros existentes.</p>
     <p><strong>Registros de outras abas:</strong> indique o aluno por seu EOL ou por <code>aluno_id</code> correspondente ao <code>_id</code> da aba Alunos do arquivo de origem. Para usar <code>aluno_id</code>, os IDs dos alunos na origem precisam estar preenchidos. Novos registros recebem IDs próprios.</p>
-    <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. Não inclui Anexos, Notas, Usuários, arquivos ou senhas. Máximo de 3.000 linhas por aba.</p>
+    <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. <strong>Não importa</strong> Anexos, Notas, Usuários, arquivos ou senhas. Limite de 2,5 MB por arquivo e 3.000 linhas por aba.</p>
     <p><strong>Confirmação:</strong> somente o botão Confirmar importação grava os dados, após a análise.</p>
     <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
   </details>
