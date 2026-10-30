@@ -7,7 +7,7 @@
  * Não habilita operação institucional ou tratamento de dados reais.
  */
 const VIDE2_TABELAS = ['Alunos','Contatos','Atestados','Atendimentos','Ocorrencias','Evidencias','EducacaoEspecial'];
-const VIDE2_MAX_BYTES = 2500000;
+const VIDE2_MAX_BYTES = 5000000;
 const VIDE2_MAX_UNZIP = 18000000;
 const VIDE2_MAX_LINHAS = 3000;
 const VIDE2_ALIASES = {
@@ -43,9 +43,9 @@ function vide2Payload_(entrada) {
     throw new Error('Envie um arquivo .xlsx ou .csv válido.');
   if (!entrada.base64 || typeof entrada.base64 !== 'string' ||
       entrada.base64.length > Math.ceil(VIDE2_MAX_BYTES*4/3)+30)
-    throw new Error('Arquivo inválido ou acima do limite de 2,5 MB.');
+    throw new Error('Arquivo inválido ou acima do limite de 5 MB.');
   const bytes = Utilities.base64Decode(entrada.base64);
-  if (bytes.length > VIDE2_MAX_BYTES) throw new Error('Arquivo acima do limite de 2,5 MB.');
+  if (bytes.length > VIDE2_MAX_BYTES) throw new Error('Arquivo acima do limite de 5 MB.');
   return bytes;
 }
 function vide2Coluna_(ref) {
