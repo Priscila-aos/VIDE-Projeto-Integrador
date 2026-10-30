@@ -39,7 +39,7 @@ A leitura de registros é vinculada ao identificador interno do estudante (`alun
 
 ```text
 Código.gs             Back-end: planilha, validações, CRUD, anexos e relatório
-Importacao.gs         Funções auxiliares de importação
+Importacao.gs         Importação CSV de alunos (rotina separada)
 ImportacaoPlanilhas.gs  Importação e validação de planilhas
 Index.html            Interface atual, formulários e apresentação do relatório
 appsscript.json       Manifesto Apps Script: V8 e permissões
