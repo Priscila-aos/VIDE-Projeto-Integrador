@@ -32,6 +32,7 @@
   .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}.stack{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .table-scroll{width:100%;overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}th{background:#edf3fa;color:#334a60;font-weight:700}td button{margin:1px;padding:5px 8px;font-size:12px}
   .pill{background:#eaf3fb;color:#17477d;padding:3px 8px;border-radius:30px;font-size:12px;font-weight:650;display:inline-block}
+  .paginacao-alunos{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #dce4ed;font-size:13px;color:#50647b}.paginacao-alunos[hidden]{display:none}.paginacao-botoes{display:flex;align-items:center;gap:10px}.paginacao-botoes button{padding:7px 12px}.paginacao-botoes button:disabled{opacity:.45;cursor:default}
   .tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}.tab{border:1px solid var(--border);background:#fff;color:#344559}.tab.active{background:#17477d;color:white}
   .records{display:grid;gap:10px}.record{border:1px solid var(--border);border-left:4px solid #3b8aca;padding:12px;border-radius:8px;background:#fbfdff}.record h3{font-size:14px;margin:0 0 5px}
   .aviso{background:#edf7ff;color:#183f63;border:1px solid #c9e7fc;border-radius:8px;padding:11px 14px;margin-bottom:15px}.aviso.erro{background:#fff0f0;color:#972539;border-color:#f3c8cc}
@@ -72,6 +73,7 @@
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
   #btnImportarV2.import-empty-button:disabled{opacity:1;cursor:default;background:#eef1f4;color:#566575;border:1px solid #ced7e1}
+  #resultadoV2.import-zero-state{background:#f6f7f8;border:1px solid #cbd5df;color:#344454;margin-bottom:4px}.import-zero-title{font-size:16px;font-weight:800;color:#24394d;margin-bottom:5px}.import-zero-description{font-size:13.5px;margin-bottom:8px}.import-zero-details{font-size:12.5px;color:#526679;white-space:pre-line}
   .import-confirmation{background:#edf6ff;border:1px solid #bcd8ef;border-left:5px solid #17477d;border-radius:9px;padding:15px 17px;margin-top:14px;color:#183f63}
   .import-confirmation strong{display:block;font-size:17px;margin-bottom:5px;color:#123c67}
   .import-confirmation p{font-size:14px;margin:0 0 8px;line-height:1.5}
@@ -154,7 +156,7 @@
     <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
   </details>
   <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
-  <div class="actions"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
+  <div class="actions" style="margin-top:6px"><button class="primary" id="btnImportarV2" type="button" onclick="confirmarImportacaoV2()" hidden>Confirmar importação</button></div>
   <div id="confirmacaoImportacaoV2" class="import-confirmation" role="status" aria-live="polite" hidden>
     <strong>✓ Importação concluída!</strong>
     <p id="mensagemConfirmacaoV2"></p>
@@ -173,7 +175,7 @@
     <div id="resultadoImportacaoCSV" class="aviso" style="margin-top:14px" role="status" aria-live="polite" hidden></div>
     <div class="actions"><button id="botaoConfirmarCSV" type="button" class="primary" onclick="confirmarCSV()" hidden>Confirmar importação</button></div>
   </div>
-  <div class="panel"><h2>Resultados <span class="pill" id="contagem">0 encontrados</span></h2><div class="table-scroll"><table><thead><tr><th>EOL / RA</th><th>Nome</th><th>Série</th><th>Turma</th><th>Período</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="resultadoAlunos"></tbody></table></div></div>
+  <div class="panel"><h2>Resultados <span class="pill" id="contagem">0 encontrados</span></h2><div class="table-scroll"><table><thead><tr><th>EOL / RA</th><th>Nome</th><th>Série</th><th>Turma</th><th>Período</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="resultadoAlunos"></tbody></table></div><div class="paginacao-alunos" id="paginacaoAlunos" hidden><span id="intervaloAlunos"></span><div class="paginacao-botoes"><button type="button" class="secondary" id="paginaAnterior" onclick="mudarPaginaAlunos(-1)">Anterior</button><span id="indicadorPagina"></span><button type="button" class="secondary" id="proximaPagina" onclick="mudarPaginaAlunos(1)">Próxima</button></div></div></div>
 </section>
 
 <section id="view-port" class="view" hidden>
@@ -420,7 +422,7 @@ async function analisarImportacaoV2Tela(){
   const botaoConfirmar=document.getElementById('btnImportarV2');
   botaoConfirmar.hidden=false;
   if(quantidadeNova===0){
-   mostrarResultadoImportacaoV2('Verificação concluída — nenhum registro novo.\nOs registros do arquivo já existem ou não há registros para adicionar. Nenhuma alteração foi realizada.\n'+resumoImportacaoV2(analise));
+   const info=document.getElementById('resultadoV2');info.className='aviso import-zero-state';info.replaceChildren();const titulo=document.createElement('div');titulo.className='import-zero-title';titulo.textContent='Verificação concluída — nenhum registro novo';const descricao=document.createElement('div');descricao.className='import-zero-description';descricao.textContent='Os registros do arquivo já existem ou não há registros novos. Nenhuma alteração foi realizada.';const detalhes=document.createElement('div');detalhes.className='import-zero-details';detalhes.textContent=resumoImportacaoV2(analise);info.append(titulo,descricao,detalhes);info.hidden=false;
    botaoConfirmar.disabled=true;
    botaoConfirmar.className='secondary import-empty-button';
    botaoConfirmar.textContent='Nenhum registro para importar';
@@ -532,6 +534,7 @@ const FORMULARIOS={Alunos:'formAluno',Contatos:'formContato',Atestados:'formAtes
 const PAGINAS={Alunos:'Cad_Aluno',Contatos:'Cad_Contato',Atestados:'Cad_Atestado',Atendimentos:'Cad_Atendimento',Ocorrencias:'Cad_Ocorrencia',Evidencias:'Cad_Evidencia',EducacaoEspecial:'Cad_EducacaoEspecial'};
 const ROTULOS={Contatos:'contato',Atestados:'atestado',Atendimentos:'atendimento',Ocorrencias:'ocorrência',Documentos:'documento',Evidencias:'evidência pedagógica',EducacaoEspecial:'orientação pedagógica'};
 let buscaSeq=0,abaSeq=0,alunoSeq=0,anexoSeq=0;
+let paginaBusca=1,totalPaginasBusca=1;
 const e=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fd=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v.slice(8,10)+'/'+v.slice(5,7)+'/'+v.slice(0,4):e(v||'—');
 function hojeLocal(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
@@ -542,10 +545,12 @@ async function executar(fn){try{aviso('');return await fn();}catch(err){aviso(er
 function ir(pag){if(pag==='port'&&!app.aluno)return ir('busca');if(pag==='busca')fecharAnexos();app.tela=pag;document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!=='view-'+pag);if(pag==='busca')buscar();if(pag==='port')renderizarPortfolio();window.scrollTo(0,0);}
 function dadosForm(id){return Object.fromEntries(new FormData(document.getElementById(id)).entries());}
 function preencherForm(id,obj){const form=document.getElementById(id);form.reset();Object.entries(obj||{}).forEach(([k,v])=>{const input=form.elements.namedItem(k);if(input&&'value'in input)input.value=String(v??'');});}
-async function buscar(){const seq=++buscaSeq;const filtros={termo:document.getElementById('termo').value,serie:document.getElementById('serieFiltro').value,periodo:document.getElementById('periodoFiltro').value};
+async function buscar(paginaSolicitada){const pagina=Number.isSafeInteger(paginaSolicitada)&&paginaSolicitada>0?paginaSolicitada:1;const seq=++buscaSeq;const filtros={termo:document.getElementById('termo').value,serie:document.getElementById('serieFiltro').value,periodo:document.getElementById('periodoFiltro').value,pagina:pagina};
 const r=await executar(()=>pedir('pesquisarAlunos',filtros));if(seq!==buscaSeq||app.tela!=='busca'||!r)return;
-document.getElementById('contagem').textContent=r.total+' encontrados';const corpo=document.getElementById('resultadoAlunos');
-corpo.innerHTML=r.alunos.length?r.alunos.map(a=>`<tr><td>${e(a.eol)}<div class="muted">${e(a.ra)}</div></td><td><strong>${e(a.nome)}</strong></td><td>${e(a.serie)}</td><td>${e(a.turma)}</td><td>${e(a.periodo)}</td><td>${e(a.situacao)}</td><td><button class="primary" data-acao="abrir-aluno" data-id="${e(a._id)}">Ver detalhes</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Nenhum estudante encontrado.</td></tr>';}
+paginaBusca=r.pagina||1;totalPaginasBusca=r.totalPaginas||1;document.getElementById('contagem').textContent=r.total+' encontrados';const corpo=document.getElementById('resultadoAlunos');
+corpo.innerHTML=r.alunos.length?r.alunos.map(a=>`<tr><td>${e(a.eol)}<div class="muted">${e(a.ra)}</div></td><td><strong>${e(a.nome)}</strong></td><td>${e(a.serie)}</td><td>${e(a.turma)}</td><td>${e(a.periodo)}</td><td>${e(a.situacao)}</td><td><button class="primary" data-acao="abrir-aluno" data-id="${e(a._id)}">Ver detalhes</button></td></tr>`).join('') :'<tr><td colspan="7" class="empty">Nenhum estudante encontrado.</td></tr>';const p=document.getElementById('paginacaoAlunos');p.hidden=!r.total;document.getElementById('intervaloAlunos').textContent=r.total?'Exibindo '+((paginaBusca-1)*10+1)+'–'+Math.min(paginaBusca*10,r.total)+' de '+r.total:'';document.getElementById('indicadorPagina').textContent='Página '+paginaBusca+' de '+totalPaginasBusca;document.getElementById('paginaAnterior').disabled=paginaBusca<=1;document.getElementById('proximaPagina').disabled=paginaBusca>=totalPaginasBusca;}
+function mudarPaginaAlunos(d){const p=paginaBusca+d;if(p>=1&&p<=totalPaginasBusca)buscar(p);}
+
 async function abrirAluno(id){const seq=++alunoSeq;const a=await executar(()=>pedir('obterAluno',id));if(!a||seq!==alunoSeq||app.tela!=='busca')return;app.aluno=a;app.modulo='Contatos';ir('port');}
 function renderizarPortfolio(){if(!app.aluno)return;const a=app.aluno;if(app.anexo&&app.anexo.aluno_id!==a._id)fecharAnexos();
 document.getElementById('resumoAluno').innerHTML=`<h1>${e(a.nome)}</h1><small>EOL: ${e(a.eol)} | RA: ${e(a.ra)} | Série: ${e(a.serie)} | Turma: ${e(a.turma)} | Período: ${e(a.periodo)} | Situação: ${e(a.situacao)}</small>`;
@@ -691,7 +696,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-acao]');
 switch(b.dataset.acao){case'abrir-aluno':abrirAluno(id);break;case'editar-registro':editarRegistro(id);break;case'excluir-registro':excluirRegistroDaTela(id);break;case'anexos':abrirAnexos(m,id);break;case'imprimir':imprimirOcorrencia(id);break;
 case'excluir-anexo':excluirAnexo(id);break;case'substituir-anexo':substituirAnexo(id);break;case'declaracao':emitirDeclaracao(b.dataset.tipo);break;}});
 document.getElementById('formRelatorio').addEventListener('submit',imprimirRelatorioIndividual);
-document.getElementById('formBusca').addEventListener('submit',ev=>{ev.preventDefault();buscar();});
+document.getElementById('formBusca').addEventListener('submit',ev=>{ev.preventDefault();buscar(1);});
 document.getElementById('formBusca').addEventListener('reset',()=>setTimeout(buscar,0));
 Object.entries(FORMULARIOS).forEach(([m,id])=>document.getElementById(id).addEventListener('submit',ev=>salvarModulo(ev,m)));
 buscar();
