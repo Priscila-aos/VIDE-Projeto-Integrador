@@ -12,7 +12,7 @@
 - Avaliação de acessibilidade, testes com contas de usuários e validação dos fluxos reais;
 - Definição da titularidade, operação e suporte do projeto.
 
-**GitHub:** manter repositório privado enquanto o grupo não decidir outra forma de publicação. Nunca inserir credenciais, arquivos de alunos ou exportações da planilha real.
+**GitHub:** o repositório está **público**; compartilhar somente código e materiais demonstrativos com dados fictícios. Nunca inserir credenciais, arquivos de alunos, dados pessoais identificáveis ou exportações da planilha real. Qualquer mudança de visibilidade e de escopo de divulgação deve ser acordada pelo grupo.
 
 **Compartilhamento:** evitar `Qualquer pessoa com o link — Editor`; a permissão de editor de planilhas vinculadas pode expor o código Apps Script.
 
