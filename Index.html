@@ -42,42 +42,49 @@
   .filebox{border:1px dashed #9caec5;padding:14px;border-radius:9px;margin:12px 0;background:#f8fbff}
   .filebox input{max-width:550px}.record p{overflow-wrap:anywhere}
   .special{background:#fff8e6;border:1px solid #efd99c;border-radius:8px;padding:12px;margin:12px 0}
-  /* Área de importação: avisos objetivos e ajuda opcional. */
-  #painelImportacaoPlanilha{padding:16px 18px}
-  #painelImportacaoPlanilha h2{margin:0 0 12px;font-size:18px}
-  .import-id-banner{background:#fff1f0;border:1px solid #e6b8b4;border-left:6px solid #ba514b;border-radius:8px;padding:10px 13px;margin:0 0 9px;color:#6d3430}
-  .import-id-title{font-size:16px;font-weight:800;color:#8c332e;display:block;margin-bottom:3px}
-  .import-id-banner p{font-size:13px;line-height:1.5;margin:0}
-  .import-id-banner code{background:#f6d9d6;border-radius:4px;padding:1px 5px;color:#842f2c;font-weight:750}
-  .import-details code{background:#e2e8f0;border-radius:4px;padding:1px 5px;color:#334155;font-weight:750}
-  .import-security-banner{background:#fffaf0;border:1px solid #e9d9b2;border-left:5px solid #c69c42;border-radius:8px;padding:10px 13px;margin:0 0 11px;color:#684e1f;font-size:13px;line-height:1.5}
-  .import-security-banner strong{color:#735019}
+  /* Importação: orientação, etapas e ajuda com hierarquia visual discreta. */
+  #painelImportacaoPlanilha{padding:17px 20px}
+  #painelImportacaoPlanilha h2{margin:0 0 14px;font-size:21px}
+  .import-id-banner{display:flex;align-items:center;gap:14px;background:#f5f6f8;border:1px solid #d8e0e9;border-left:5px solid #64748b;border-radius:9px;padding:13px 16px;margin:0 0 10px;color:#334155}
+  .import-id-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:2px solid #8aa5c2;border-radius:50%;font-size:22px;font-weight:800;flex-shrink:0;color:#41668c}
+  .import-id-title{font-size:16px;font-weight:800;color:#243954;display:block;margin-bottom:5px}
+  .import-id-banner p{font-size:13.5px;line-height:1.52;margin:0}
+  .import-id-banner code{background:#e2e8f0;border-radius:4px;padding:1px 5px;color:#334155;font-weight:750}
+  .import-security-banner{background:#fffaf1;border:1px solid #ead7b4;border-radius:8px;padding:10px 13px;margin:0 0 11px;color:#71511b;font-size:13px;line-height:1.48}
+  .import-security-banner strong{color:#764c0e}
+  .import-flow{background:#f8fafd;border:1px solid #dbe5ef;border-radius:9px;padding:14px 16px;margin:11px 0 14px;color:#253b54}
+  .import-flow-title{display:block;font-size:16px;font-weight:800;color:#183b61;margin:0 0 11px}
+  .import-flow-steps{display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr);gap:9px;align-items:center}
+  .import-flow-step{display:flex;gap:11px;align-items:center;min-height:84px;padding:10px 12px;background:#fff;border:1px solid #dae3ed;border-radius:8px}
+  .import-step-number{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#e8f1fa;color:#1b4975;font-size:16px;font-weight:800;flex-shrink:0}
+  .import-step-title{display:block;color:#1e3654;font-size:13.5px;font-weight:800;margin-bottom:3px}
+  .import-step-desc{display:block;color:#536780;font-size:12.5px;line-height:1.4;font-weight:400}
+  .import-flow-arrow{color:#7e91a6;font-weight:700;text-align:center;font-size:18px}
+  .import-flow-note{font-size:13px;margin:10px 0 0;line-height:1.48;color:#43566b}
+  .import-flow-note b{color:#253b54}
   .import-controls{display:flex;align-items:end;gap:10px;flex-wrap:wrap}
   .import-file{flex:1 1 300px;min-width:235px}
-  .import-file label,.import-csv label{font-size:12px;margin:0 0 5px}
-  .import-file input{min-height:41px;padding:7px 9px;font-size:12px}
+  .import-file label,.import-csv label{font-size:13px;margin:0 0 5px}
+  .import-file input{min-height:41px;padding:7px 9px;font-size:12.5px}
   .import-file input::file-selector-button{background:#eef3f9;border:1px solid #bac9d9;border-radius:5px;padding:5px 9px;color:#243f5b;font:inherit;font-weight:650;margin-right:10px;cursor:pointer}
   .import-csv{flex:0 0 180px}
   .import-csv select{height:41px}
   .import-controls>button{min-height:41px}
   .import-footnote{font-size:12px;color:#526174;margin:9px 0 0}
-  .import-flow{background:#ffffff;border:1px solid #d8dee6;border-radius:8px;padding:10px 13px;margin:10px 0 12px;color:#253b54}
-  .import-flow strong{display:block;font-size:15px;color:#273540;margin-bottom:8px}
-  .import-flow-steps{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:650}
-  .import-flow-step{background:#f8fafc;border:1px solid #dce2e8;color:#334155;border-radius:6px;padding:6px 10px}
-  .import-flow-arrow{color:#7b8794;font-weight:700}
-  .import-flow-note{font-size:13.5px;margin:8px 0 0;line-height:1.5}
-  .import-flow-note b{color:#334155}
-  #painelImportacaoPlanilha .import-controls{margin-top:8px}
-  .import-details{background:#ffffff;border:1px solid #d8dee6;border-radius:8px;margin-top:12px;padding:12px 14px;font-size:13.5px;color:#3f4c59}
-  .import-details summary{color:#233444;font-weight:800;font-size:15px;line-height:1.45;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .import-details{background:#edf4fc;border:1px solid #c6dbf2;border-radius:9px;margin-top:14px;padding:14px 15px;font-size:13.5px;color:#3f4c59}
+  .import-details summary{color:#183b61;font-weight:800;font-size:15.5px;line-height:1.45;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
   .import-details summary::-webkit-details-marker{display:none}
-  .import-details summary::after{content:"+";font-size:21px;line-height:1;color:#3d4c5c;font-weight:500}
-  .import-details[open] summary::after{content:"−"}
+  .import-details-summary-wrap{display:flex;align-items:center;gap:12px;min-width:0}
+  .import-details-icon{width:40px;height:40px;border-radius:50%;background:#d9e9fa;display:flex;align-items:center;justify-content:center;color:#1b4975;font-size:21px;font-weight:750;flex-shrink:0}
+  .import-details-caption{display:block;font-size:12.5px;font-weight:400;color:#536780;margin-top:3px;line-height:1.35}
+  .import-details summary::after{content:"⌄";font-size:22px;line-height:1;color:#315b85;font-weight:700}
+  .import-details[open] summary::after{content:"⌃"}
   .import-details summary:focus-visible{outline:3px solid #8aa3bf;outline-offset:4px}
   .import-details[open] summary{margin-bottom:10px}
   .import-details p{margin:8px 0;line-height:1.6}
-  @media(max-width:650px){#painelImportacaoPlanilha{padding:14px}.import-controls{gap:9px}.import-file{flex-basis:100%}.import-csv{flex:1 1 160px}}
+  .import-details code{background:#e2e8f0;border-radius:4px;padding:1px 5px;color:#334155;font-weight:750}
+  @media(max-width:820px){.import-flow-steps{grid-template-columns:1fr;gap:5px}.import-flow-step{min-height:60px}.import-flow-arrow{transform:rotate(90deg)}}
+  @media(max-width:650px){#painelImportacaoPlanilha{padding:14px}.import-controls{gap:9px}.import-file{flex-basis:100%}.import-csv{flex:1 1 160px}.import-id-icon{width:32px;height:32px;font-size:18px}.import-flow{padding:12px}.import-id-banner{padding:11px}}
   .filelinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filelinks a{border:1px solid #9cbce0;border-radius:7px;color:#17477d;background:#edf5ff;text-decoration:none;font-weight:600}.filelinks a:hover{background:#e1edfa}
 </style>
 
@@ -99,20 +106,25 @@
   <div class="panel" id="painelImportacaoPlanilha" hidden>
   <h2>Importar planilha</h2>
   <div class="import-id-banner" role="note" aria-label="Identificador gerado automaticamente">
-    <strong class="import-id-title">ID gerado automaticamente</strong>
-    <p>Na aba <strong>Alunos</strong>, preencha <strong>Nome</strong> e <strong>EOL</strong>. O campo <code>_id</code> <strong>pode ficar vazio</strong>: o V.I.D.E. gera um ID único para cada novo aluno.</p>
+    <span class="import-id-icon" aria-hidden="true">i</span>
+    <div>
+      <strong class="import-id-title">ID gerado automaticamente</strong>
+      <p>Você não precisa preencher o campo <code>_id</code> na aba <strong>Alunos</strong>. Informe <strong>Nome</strong> e <strong>EOL</strong>, que são obrigatórios. Ao confirmar a importação, o V.I.D.E. gera automaticamente um ID único para cada novo aluno.</p>
+    </div>
   </div>
   <div class="import-security-banner" role="note" aria-label="Atenção: somente dados fictícios">
-    <strong>ATENÇÃO — SOMENTE DADOS FICTÍCIOS.</strong> Este é um protótipo acadêmico, não preparado para operar com dados reais de estudantes.
+    <strong>Atenção: somente dados fictícios.</strong> Este é um protótipo acadêmico, não preparado para operar com dados reais de estudantes.
   </div>
   <div class="import-flow" role="note" aria-label="Etapas e garantias da importação">
-    <strong>Como funciona a importação</strong>
+    <strong class="import-flow-title">Como funciona a importação</strong>
     <div class="import-flow-steps">
-      <span class="import-flow-step">1. Analisar</span><span class="import-flow-arrow">→</span>
-      <span class="import-flow-step">2. Conferir o resumo</span><span class="import-flow-arrow">→</span>
-      <span class="import-flow-step">3. Confirmar importação</span>
+      <div class="import-flow-step"><span class="import-step-number">1</span><div><span class="import-step-title">Selecionar arquivo</span><span class="import-step-desc">Escolha o Excel ou CSV com dados fictícios.</span></div></div>
+      <span class="import-flow-arrow" aria-hidden="true">→</span>
+      <div class="import-flow-step"><span class="import-step-number">2</span><div><span class="import-step-title">Verificar planilha</span><span class="import-step-desc">Confira o resumo e corrija possíveis problemas.</span></div></div>
+      <span class="import-flow-arrow" aria-hidden="true">→</span>
+      <div class="import-flow-step"><span class="import-step-number">3</span><div><span class="import-step-title">Confirmar importação</span><span class="import-step-desc">Somente a confirmação adiciona registros.</span></div></div>
     </div>
-    <p class="import-flow-note"><b>Analisar não grava dados.</b> Somente a confirmação adiciona registros. <b>Os registros existentes são preservados.</b></p>
+    <p class="import-flow-note"><b>Verificar planilha não grava dados.</b> O sistema confere campos, vínculos e possíveis duplicidades. <b>Os registros existentes são preservados.</b></p>
   </div>
   <div class="import-controls">
     <div class="import-file">
@@ -123,16 +135,16 @@
       <label for="abaCSVV2">Aba correspondente ao CSV</label>
       <select id="abaCSVV2" onchange="limparImportacaoV2()"><option>Alunos</option><option>Contatos</option><option>Atestados</option><option value="Atendimentos">Registros / Atendimentos</option><option>Ocorrencias</option><option>Evidencias</option><option>EducacaoEspecial</option></select>
     </div>
-    <button class="primary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Analisar</button>
+    <button class="primary" type="button" id="btnAnaliseV2" onclick="analisarImportacaoV2Tela()">Verificar planilha</button>
     <button class="secondary" type="button" onclick="fecharImportacaoV2()">Fechar</button>
   </div>
   <p class="import-footnote">Excel: várias abas • CSV: uma aba • Limite de 5 MB por arquivo.</p>
   <details class="import-details">
-    <summary>Como preparar a planilha, vincular registros e entender os limites</summary>
+    <summary><span class="import-details-summary-wrap"><span class="import-details-icon" aria-hidden="true">?</span><span>Como preparar a planilha, vincular registros e entender os limites<span class="import-details-caption">Orientações sobre campos, IDs, vínculos entre abas e formatos aceitos.</span></span></span></summary>
     <p><strong>Identificadores:</strong> para cadastrar alunos, Nome e EOL são obrigatórios. O <code>_id</code> pode ficar vazio, pois será gerado automaticamente. EOLs já cadastrados são ignorados, sem alterar registros existentes.</p>
     <p><strong>Registros de outras abas:</strong> indique o aluno por seu EOL ou por <code>aluno_id</code> correspondente ao <code>_id</code> da aba Alunos do arquivo de origem. Para usar <code>aluno_id</code>, os IDs dos alunos na origem precisam estar preenchidos. Novos registros recebem IDs próprios.</p>
     <p><strong>Abas aceitas:</strong> Alunos, Contatos, Atestados, Atendimentos (Registros), Ocorrências, Evidências e Educação Especial. <strong>Não importa</strong> Anexos, Notas, Usuários, arquivos ou senhas. Limite de 5 MB por arquivo e 3.000 linhas por aba.</p>
-    <p><strong>Confirmação:</strong> somente o botão Confirmar importação grava os dados, após a análise.</p>
+    <p><strong>Verificação:</strong> o botão Verificar planilha confere os dados e apresenta um resumo sem gravar registros. Somente Confirmar importação adiciona registros.</p>
     <p><strong>Segurança:</strong> uma implantação real exigiria LGPD, controle de acesso por perfil, segurança, homologação, backup, suporte e manutenção contínua. Utilize apenas dados fictícios neste protótipo.</p>
   </details>
   <div id="resultadoV2" class="aviso" role="status" aria-live="polite" hidden style="margin-top:12px;white-space:pre-line"></div>
